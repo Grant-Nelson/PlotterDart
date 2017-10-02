@@ -36,7 +36,7 @@ class PlotSvg {
     bool _panStarted;
 
     /**
-     * TODO: Comment
+     * Creates a plotter that outputs SVG.
      */
     PlotSvg(this._targetDivId, this._plotter) {
         this._svgValidator = new dom.NodeValidatorBuilder()
@@ -57,21 +57,21 @@ class PlotSvg {
     }
 
     /**
-     * TODO: Comment
+     * The width of the div that is being plotted to.
      */
     double _width() {
       return this._targetDiv.clientWidth.toDouble();
     }
 
     /**
-     * TODO: Comment
+     * The height of the div that is being plotted to.
      */
     double _height() {
       return this._targetDiv.clientHeight.toDouble();
     }
 
     /**
-     * TODO: Comment
+     * Gets the transformer for the plot target div.
      */
     Transformer _trans() {
         double width = this._width();
@@ -81,7 +81,7 @@ class PlotSvg {
     }
 
     /**
-     * TODO: Comment
+     * Draws to the target with SVG.
      */
     void _draw() {
         double width = this._width();

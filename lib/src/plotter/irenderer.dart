@@ -90,6 +90,18 @@ abstract class IRenderer {
   void setFillColor(Color color);
 
   /**
+   * Gets if the lines should be drawn directed (with arrows), or not.
+   * @return  True if drawn directed, false otherwise.
+   */
+  bool getDirectedLines();
+
+  /**
+   * Sets if the lines should be drawn directed (with arrows), or not.
+   * @param  directed  True to drawn directed, false otherwise.
+   */
+  void setDirectedLines(bool directed);
+
+  /**
    * Draws a point to the viewport.
    * @param x The x value of the point to draw.
    * @param y The y value of the point to draw.
@@ -129,6 +141,58 @@ abstract class IRenderer {
    * @param y2 The y value of the second corner.
    */
   void drawRect(double x1, double y1, double x2, double y2);
+
+  /**
+   * Draws a set of rectangles to the viewport.
+   * @param xCoords The x values for the rectangle set.
+   * @param yCoords The y values for the rectangle set.
+   * @param widths The width values for the rectangle set.
+   * @param heights The height values for the rectangle set.
+   */
+  void drawRects(List<double> xCoords, List<double> yCoords, List<double> widths, List<double> heights);
+
+  /**
+   * Draws a set of rectangles to the viewport.
+   * @param xCoords The x values for the rectangle set.
+   * @param yCoords The y values for the rectangle set.
+   * @param width The width value for the rectangle set.
+   * @param height The height value for the rectangle set.
+   */
+  void drawRectSet(List<double> xCoords, List<double> yCoords, double width, double height);
+
+  /**
+   * Draws a set of ellips to the viewport.
+   * @param xCoords The x values for the ellips set.
+   * @param yCoords The y values for the ellips set.
+   * @param widths The width values for the ellips set.
+   * @param heights The height values for the ellips set.
+   */
+  void drawEllips(List<double> xCoords, List<double> yCoords, List<double> widths, List<double> heights);
+
+  /**
+   * Draws a set of ellips to the viewport.
+   * @param xCoords The x values for the ellips set.
+   * @param yCoords The y values for the ellips set.
+   * @param width The width value for the ellips set.
+   * @param height The height value for the ellips set.
+   */
+  void drawEllipsSet(List<double> xCoords, List<double> yCoords, double width, double height);
+
+  /**
+   * Draws a set of circles to the viewport.
+   * @param xCoords The x values of the top-left corner points.
+   * @param yCoords The y values of the top-left corner points.
+   * @param radius The radius values of the circles.
+   */
+  void drawCircs(List<double> xCoords, List<double> yCoords, List<double> radius);
+
+  /**
+   * Draws a set of circles to the viewport.
+   * @param xCoords The x values of the top-left corner points.
+   * @param yCoords The y values of the top-left corner points.
+   * @param radius The radius of all the circles.
+   */
+  void drawCircSet(List<double> xCoords, List<double> yCoords, double radius);
 
   /**
    * Draws a polygon to the viewport.

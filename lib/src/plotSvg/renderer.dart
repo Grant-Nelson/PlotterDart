@@ -32,6 +32,9 @@ class Renderer extends IRenderer {
     // The CSS draw color currently set.
     String _drawClr;
 
+    // The flag indicating if lines should be drawn directed.
+    bool _lineDir;
+
     /**
      * Creates a new renderer.
      * @param window The bounds of the panel.
@@ -47,6 +50,7 @@ class Renderer extends IRenderer {
         this._lineClr = new Color(0.0, 0.0, 0.0);
         this._fillClr = null;
         this._setDrawColor(this._lineClr);
+        this._lineDir = false;
     }
 
     /**
@@ -171,6 +175,22 @@ class Renderer extends IRenderer {
     }
 
     /**
+     * Gets if the lines should be drawn directed (with arrows), or not.
+     * @return  True if drawn directed, false otherwise.
+     */
+    bool getDirectedLines() {
+        return this._lineDir;
+    }
+
+    /**
+     * Sets if the lines should be drawn directed (with arrows), or not.
+     * @param  directed  True to drawn directed, false otherwise.
+     */
+    void setDirectedLines(bool directed) {
+        this._lineDir = directed;
+    }
+
+    /**
      * Clears the panel to white.
      */
     void clear() {
@@ -213,11 +233,29 @@ class Renderer extends IRenderer {
      * @param y2 The y value of the second point.
      */
     void drawLine(double x1, double y1, double x2, double y2) {
-        x1 = this._transX(x1);
-        y1 = this._transY(y1);
-        x2 = this._transX(x2);
-        y2 = this._transY(y2);
-        this._sout.writeln("  <line x1=\"$x1\" y1=\"$y1\" x2=\"$x2\" y2=\"$y2\" stroke=\""+this._drawClr+"\" />");
+        double tx1 = this._transX(x1);
+        double ty1 = this._transY(y1);
+        double tx2 = this._transX(x2);
+        double ty2 = this._transY(y2);
+        this._sout.writeln("  <line x1=\"$tx1\" y1=\"$ty1\" x2=\"$tx2\" y2=\"$ty2\" stroke=\""+this._drawClr+"\" />");
+
+        if (this._lineDir) {
+            double dx = x2-x1;
+            double dy = y2-y1;
+            double length = math.sqrt(dx*dx + dy*dy);
+            if (length > 1.0e-12) {
+                dx /= length;
+                dy /= length;
+                double width = 6.0;
+                double height = 4.0;
+                double tx3 = tx2 - dx*width;
+                double dx3 = dy*height;
+                double ty3 = tx2 + dy*width;
+                double dy3 = dx*height;
+                this._sout.writeln("  <line x1=\"$tx2\" y1=\"$ty2\" x2=\"${tx3 + dx3}\" y2=\"${ty3 + dy3}\" stroke=\""+this._drawClr+"\" />");
+                this._sout.writeln("  <line x1=\"$tx2\" y1=\"$ty2\" x2=\"${tx3 - dx3}\" y2=\"${ty3 - dy3}\" stroke=\""+this._drawClr+"\" />");
+            }
+        }
 
         if (this._pointSize > 1.0) {
             this.drawPoint(x1, y1);
@@ -264,6 +302,140 @@ class Renderer extends IRenderer {
             this._sout.write("fill=\"none\" ");
         }
         this._sout.writeln("stroke=\""+this._drawClr+"\" />");
+    }
+
+    /**
+     * Draws a set of rectangles to the viewport.
+     * @param xCoords The x values of the top-left corner points.
+     * @param yCoords The y values of the top-left corner points.
+     * @param widths The width values of the rectangles.
+     * @param heights The height values of the rectangles.
+     */
+    void drawRects(List<double> xCoords, List<double> yCoords,
+                          List<double> widths, List<double> heights) {
+        for (int i = xCoords.length-1; i >= 0; --i) {
+            double x = xCoords[i];
+            double y = yCoords[i];
+            this.drawRect(x, y, x+widths[i], y+heights[i]);
+        }
+    }
+
+    /**
+     * Draws a set of rectangles to the viewport.
+     * @param xCoords The x values of the top-left corner points.
+     * @param yCoords The y values of the top-left corner points.
+     * @param width The width of all the rectangles.
+     * @param height The height of all the rectangles.
+     */
+    void drawRectSet(List<double> xCoords, List<double> yCoords,
+                          double width, double height) {
+        for (int i = xCoords.length-1; i >= 0; --i) {
+            double x = xCoords[i];
+            double y = yCoords[i];
+            this.drawRect(x, y, x+width, y+height);
+        }
+    }
+
+    /**
+     * Draws an ellipse to the viewport.
+     * @param x1 The x value of the first corner.
+     * @param y1 The y value of the first corner.
+     * @param x2 The x value of the second corner.
+     * @param y2 The y value of the second corner.
+     */
+    void drawEllip(double x1, double y1, double x2, double y2) {
+        x1 = this._transX(x1);
+        y1 = this._transY(y1);
+        x2 = this._transX(x2);
+        y2 = this._transY(y2);
+        if (x1 > x2) {
+            double temp = x1;
+            x1 = x2;
+            x2 = temp;
+        }
+        if (y1 > y2) {
+            double temp = y1;
+            y1 = y2;
+            y2 = temp;
+        }
+        double rx = (x2-x1)*0.5;
+        double ry = (y2-y1)*0.5;
+        double cx = x1 + rx;
+        double cy = y1 + ry;
+        this._sout.write("  <ellipse cx=\"$cx\" cy=\"$cy\" rx=\"$rx\" ry=\"$ry\" stroke=\""+this._drawClr+"\" />");
+    }
+
+    /**
+     * Draws a set of ellipses to the viewport.
+     * @param xCoords The x values of the top-left corner points.
+     * @param yCoords The y values of the top-left corner points.
+     * @param widths The width values of the ellipses.
+     * @param heights The height values of the ellipses.
+     */
+    void drawEllips(List<double> xCoords, List<double> yCoords,
+                           List<double> widths, List<double> heights) {
+        for (int i = xCoords.length-1; i >= 0; --i) {
+            double x = xCoords[i];
+            double y = yCoords[i];
+            this.drawEllip(x, y, x+widths[i], y+heights[i]);
+        }
+    }
+
+    /**
+     * Draws a set of ellipses to the viewport.
+     * @param xCoords The x values of the top-left corner points.
+     * @param yCoords The y values of the top-left corner points.
+     * @param width The width of all the ellipses.
+     * @param height The height of all the ellipses.
+     */
+    void drawEllipsSet(List<double> xCoords, List<double> yCoords,
+                          double width, double height) {
+        for (int i = xCoords.length-1; i >= 0; --i) {
+            double x = xCoords[i];
+            double y = yCoords[i];
+            this.drawEllip(x, y, x+width, y+height);
+        }
+    }
+
+    /**
+     * Draws a set of circles to the viewport.
+     * @param xCoords The x values of the top-left corner points.
+     * @param yCoords The y values of the top-left corner points.
+     * @param radius The radius values of the circles.
+     */
+    void drawCircs(List<double> xCoords, List<double> yCoords, List<double> radius) {
+        for (int i = xCoords.length-1; i >= 0; --i) {
+            double r = radius[i];
+            double cx = xCoords[i];
+            double cy = yCoords[i];
+            double x2 = this._transX(cx+r);
+            double y2 = this._transY(cy+r);
+            cx = this._transX(cx);
+            cy = this._transY(cy);
+            double rx = x2-cx;
+            double ry = y2-cy;
+            this._sout.write("  <ellipse cx=\"$cx\" cy=\"$cy\" rx=\"$rx\" ry=\"$ry\" stroke=\""+this._drawClr+"\" />");
+        }
+    }
+
+    /**
+     * Draws a set of circles to the viewport.
+     * @param xCoords The x values of the top-left corner points.
+     * @param yCoords The y values of the top-left corner points.
+     * @param radius The radius of all the circles.
+     */
+    void drawCircSet(List<double> xCoords, List<double> yCoords, double radius) {
+        for (int i = xCoords.length-1; i >= 0; --i) {
+            double cx = xCoords[i];
+            double cy = yCoords[i];
+            double x2 = this._transX(cx+radius);
+            double y2 = this._transY(cy+radius);
+            cx = this._transX(cx);
+            cy = this._transY(cy);
+            double rx = x2-cx;
+            double ry = y2-cy;
+            this._sout.write("  <ellipse cx=\"$cx\" cy=\"$cy\" rx=\"$rx\" ry=\"$ry\" stroke=\""+this._drawClr+"\" />");
+        }
     }
 
     /**
