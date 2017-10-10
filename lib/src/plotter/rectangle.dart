@@ -1,76 +1,55 @@
 part of plotter;
 
-/**
- * A plotter item for drawing rectangles.
- */
+/// A plotter item for drawing rectangles.
 class Rectangles extends PlotterItem {
+  /// The x value for the top-left corner points.
+  List<double> _xCoords;
 
-    // The x value for the top-left corner points.
-    List<double> _xCoords;
+  /// The y value for the top-left corner points.
+  List<double> _yCoords;
 
-    // The y value for the top-left corner points.
-    List<double> _yCoords;
+  /// The width of the rectangles.
+  List<double> _widths;
 
-    // The width of the rectangles.
-    List<double> _widths;
+  /// The height of the rectangles.
+  List<double> _heights;
 
-    // The height of the rectangles.
-    List<double> _heights;
+  /// Creates a new rectangle plotter item.
+  Rectangles() {
+    _xCoords = new List<double>();
+    _yCoords = new List<double>();
+    _widths = new List<double>();
+    _heights = new List<double>();
+  }
 
-    /**
-     * Creates a new rectangle plotter item.
-     */
-    Rectangles() {
-        this._xCoords = new List<double>();
-        this._yCoords = new List<double>();
-        this._widths = new List<double>();
-        this._heights = new List<double>();
+  /// Adds rectangles to this plotter item.
+  void add(List<double> val) {
+    int count = val.length;
+    for (int i = 0; i < count; i += 4) {
+      _xCoords.add(val[i]);
+      _yCoords.add(val[i + 1]);
+      _widths.add(val[i + 2]);
+      _heights.add(val[i + 3]);
     }
+  }
 
-    /**
-     * Adds rectangles to this plotter item.
-     * @param val The values for the rectangles to plot.
-     */
-    Rectangles add(List<double> val) {
-        int count = val.length;
-        for (int i = 0; i < count; i += 4) {
-            this._xCoords.add(val[i]);
-            this._yCoords.add(val[i+1]);
-            this._widths.add(val[i+2]);
-            this._heights.add(val[i+3]);
-        }
-        return this;
-    }
+  /// The number of rectangles in this item.
+  int get count => _xCoords.length;
 
-    /**
-     * The number of rectangles in this item.
-     * @return The rectangle count.
-     */
-    int count() {
-        return this._xCoords.length;
-    }
+  /// Draws the group to the panel.
+  void _onDraw(IRenderer r) {
+    r.drawRects(_xCoords, _yCoords, _widths, _heights);
+  }
 
-    /**
-     * Draws the group to the panel.
-     * @param r The renderer to draw with.
-     */
-    void _onDraw(IRenderer r) {
-        r.drawRects(this._xCoords, this._yCoords, this._widths, this._heights);
+  /// Gets the bounds for the item.
+  Bounds _onGetBounds(Transformer trans) {
+    Bounds b = new Bounds.empty();
+    for (int i = count - 1; i >= 0; --i) {
+      double x = _xCoords[i];
+      double y = _yCoords[i];
+      b.expand(x, y);
+      b.expand(x + _widths[i], y + _heights[i]);
     }
-
-    /**
-     * Gets the bounds for the item.
-     * @param trans The transformer to apply to the bounds.
-     * @return The bounds of the item.
-     */
-    Bounds _onGetBounds(Transformer trans) {
-        Bounds b = new Bounds.empty();
-        for (int i = this.count()-1; i >= 0; --i) {
-            double x = this._xCoords[i];
-            double y = this._yCoords[i];
-            b.expand(x, y);
-            b.expand(x+this._widths[i], y+this._heights[i]);
-        }
-        return trans.transform(b);
-    }
+    return trans.transform(b);
+  }
 }

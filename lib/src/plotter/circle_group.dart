@@ -1,90 +1,51 @@
 part of plotter;
 
-/**
- * A plotter item for drawing circles.
- */
+/// A plotter item for drawing circles.
 class CircleGroup extends PlotterItem {
+  /// The x value for the top-left corner points.
+  List<double> _xCoords;
 
-    // The x value for the top-left corner points.
-    List<double> _xCoords;
+  /// The y value for the top-left corner points.
+  List<double> _yCoords;
 
-    // The y value for the top-left corner points.
-    List<double> _yCoords;
+  /// The radius of all the circles.
+  double _radius;
 
-    // The radius of all the circles.
-    double _radius;
+  /// Creates a new circle plotter item.
+  CircleGroup(this._radius) {
+    _xCoords = new List<double>();
+    _yCoords = new List<double>();
+  }
 
-    /**
-     * Creates a new circle plotter item.
-     * @param radius The initial radius for all the circles.
-     */
-    CircleGroup(double radius) {
-        this._xCoords = new List<double>();
-        this._yCoords = new List<double>();
-        this._radius = radius;
+  /// The radius for all the circles.
+  double get radius => _radius;
+  set radius(double radius) => _radius = radius;
+
+  /// Adds circles to this plotter item.
+  void add(List<double> val) {
+    int count = val.length;
+    for (int i = 0; i < count; i += 2) {
+      _xCoords.add(val[i]);
+      _yCoords.add(val[i + 1]);
     }
+  }
 
-    /**
-     * Gets the radius for all the circles.
-     * @return The circles' radius.
-     */
-    double radius() {
-        return this._radius;
-    }
+  /// The number of circles in this item.
+  int get count => _xCoords.length;
 
-    /**
-     * Sets the radius for all the circles.
-     * @param radius The radius to set.
-     */
-    CircleGroup setRadius(double radius) {
-        this._radius = radius;
-        return this;
-    }
+  /// Draws the group to the panel.
+  void _onDraw(IRenderer r) {
+    r.drawCircSet(_xCoords, _yCoords, _radius);
+  }
 
-    /**
-     * Adds circles to this plotter item.
-     * @param val The values for the circles to plot.
-     * @return This plotter item.
-     */
-    CircleGroup add(List<double> val) {
-        int count = val.length;
-        for (int i = 0; i < count; i += 2) {
-            this._xCoords.add(val[i]);
-            this._yCoords.add(val[i+1]);
-        }
-        return this;
+  /// Gets the bounds for the item.
+  Bounds _onGetBounds(Transformer trans) {
+    Bounds b = new Bounds.empty();
+    for (int i = count - 1; i >= 0; --i) b.expand(_xCoords[i], _yCoords[i]);
+    if (!b.isEmpty) {
+      b.expand(b.xmin - _radius, b.ymin - _radius);
+      b.expand(b.xmax + _radius, b.ymax + _radius);
     }
-
-    /**
-     * The number of circles in this item.
-     * @return The circle count.
-     */
-    int count() {
-        return this._xCoords.length;
-    }
-
-    /**
-     * Draws the group to the panel.
-     * @param r The renderer to draw with.
-     */
-    void _onDraw(IRenderer r) {
-        r.drawCircSet(this._xCoords, this._yCoords, this._radius);
-    }
-
-    /**
-     * Gets the bounds for the item.
-     * @param trans The transformer to apply to the bounds.
-     * @return The bounds of the item.
-     */
-    Bounds _onGetBounds(Transformer trans) {
-        Bounds b = new Bounds.empty();
-        double d = 2.0*this._radius;
-        for (int i = this.count()-1; i >= 0; --i) {
-            double x = this._xCoords[i]-this._radius;
-            double y = this._yCoords[i]-this._radius;
-            b.expand(x, y);
-            b.expand(x+d, y+d);
-        }
-        return trans.transform(b);
-    }
+    return trans.transform(b);
+  }
 }
