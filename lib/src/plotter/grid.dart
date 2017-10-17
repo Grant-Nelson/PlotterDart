@@ -25,16 +25,16 @@ class Grid extends PlotterItem {
 
   /// Gets the number above the given value in multiples of the given power value.
   double _getUpper(double value, double pow) {
-    return ((value / pow) * pow).ceilToDouble();
+    return (value / pow).ceilToDouble() * pow;
   }
 
   /// Gets the number below the given value in multiples of the given power value.
   double _getLower(double value, double pow) {
-    return ((value / pow) * pow).floorToDouble();
+    return (value / pow).floorToDouble() * pow;
   }
 
-  /// Gets a horizontal line at the given offset, adds it to the given group.
-  void _getHorz(List<double> group, double offset, Bounds window, Bounds view) {
+  /// Adds a horizontal line at the given offset to the given group.
+  void _addHorz(List<double> group, double offset, Bounds window, Bounds view) {
     group.add((offset - view.ymin) * window.height / view.height);
   }
 
@@ -56,14 +56,13 @@ class Grid extends PlotterItem {
     if (offset + pow == offset) return;
     List<double> group = groups[rmdPow - 1];
     for (offset += pow; offset < maxOffset; offset += pow) {
-      _getHorz(group, offset, window, view);
+      _addHorz(group, offset, window, view);
       _getHorzs(groups, window, view, lowPow, offset, offset + pow, rmdPow - 1);
     }
-    _getHorzs(groups, window, view, lowPow, offset, offset + pow, rmdPow - 1);
   }
 
-  /// Gets a vertical line at the given offset, adds it to the given group.
-  void _getVert(List<double> group, double offset, Bounds window, Bounds view) {
+  /// Adds a vertical line at the given offset to the given group.
+  void _addVert(List<double> group, double offset, Bounds window, Bounds view) {
     group.add((offset - view.xmin) * window.width / view.width);
   }
 
@@ -80,15 +79,12 @@ class Grid extends PlotterItem {
     if (rmdPow <= 0) return;
     double lowPow = pow / 10.0;
     double offset = minOffset;
-    _getVerts(groups, window, view, lowPow, offset, offset + pow, rmdPow - 1);
-
-    if (offset + pow == offset) return;
     List<double> group = groups[rmdPow - 1];
+    _getVerts(groups, window, view, lowPow, offset, offset + pow, rmdPow - 1);
     for (offset += pow; offset < maxOffset; offset += pow) {
-      _getVert(group, offset, window, view);
+      _addVert(group, offset, window, view);
       _getVerts(groups, window, view, lowPow, offset, offset + pow, rmdPow - 1);
     }
-    _getVerts(groups, window, view, lowPow, offset, offset + pow, rmdPow - 1);
   }
 
   /// Sets the linearly interpolated color used for the grid lines to the renderer.
@@ -108,7 +104,7 @@ class Grid extends PlotterItem {
         _getMaxPow(view.height * 5.0 / window.height));
 
     int diff = maxPow - minPow;
-    double pow = math.pow(10, maxPow.toDouble() - 1);
+    double pow = math.pow(10, maxPow - 1);
     double maxXOffset = _getUpper(view.xmax, pow);
     double minXOffset = _getLower(view.xmin, pow);
     double maxYOffset = _getUpper(view.ymax, pow);
@@ -138,7 +134,7 @@ class Grid extends PlotterItem {
   void _drawAxis(IRenderer r, Bounds window, Bounds view) {
     if ((view.xmin <= 0.0) && (view.xmax >= 0.0)) {
       List<double> group = new List<double>();
-      _getVert(group, 0.0, window, view);
+      _addVert(group, 0.0, window, view);
       if (group.length == 1) {
         r.color = _axisClr;
         double x = group[0];
@@ -148,7 +144,7 @@ class Grid extends PlotterItem {
 
     if ((view.ymin <= 0.0) && (view.ymax >= 0.0)) {
       List<double> group = new List<double>();
-      _getHorz(group, 0.0, window, view);
+      _addHorz(group, 0.0, window, view);
       if (group.length == 1) {
         r.color = _axisClr;
         double y = group[0];

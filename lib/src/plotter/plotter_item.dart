@@ -17,14 +17,15 @@ abstract class PlotterItem {
   void addAttr(IAttribute attr) => _attrs.add(attr);
 
   /// Adds a color attribute to this item.
-  void addColor(double red, double green, double blue, [double alpha=1.0]) =>
+  void addColor(double red, double green, double blue, [double alpha = 1.0]) =>
       addAttr(new ColorAttr.rgb(red, green, blue, alpha));
 
   /// Adds a point size attribute to this item.
   void addPointSize(double size) => addAttr(new PointSizeAttr(size));
 
   /// Adds a filled attribute to this item.
-  void addFillColor(double red, double green, double blue, [double alpha=1.0]) =>
+  void addFillColor(double red, double green, double blue,
+          [double alpha = 1.0]) =>
       addAttr(new FillColorAttr.rgb(red, green, blue, alpha));
 
   /// Adds a directed line attribute to this item.

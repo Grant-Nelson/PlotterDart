@@ -1,5 +1,5 @@
-import 'package:plotter/plotter.dart' as plotter;
-import 'package:plotter/plotSvg.dart' as plotSvg;
+import 'package:plotterDart/plotter.dart' as plotter;
+import 'package:plotterDart/plotSvg.dart' as plotSvg;
 
 void main() {
   var plot = new plotter.Plotter();

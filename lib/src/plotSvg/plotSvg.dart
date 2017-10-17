@@ -6,145 +6,120 @@ import '../plotter/plotter.dart';
 
 part 'renderer.dart';
 
+/// Plotter renderer which outputs SVG.
 class PlotSvg {
-  // The identifier of the target html dive to write to.
+  /// The identifier of the target html dive to write to.
   final String _targetDivId;
 
-  // The target html div to write to.
+  /// The target html div to write to.
   dom.Element _targetDiv;
 
-  // The SVG html validator.
+  /// The SVG html validator.
   dom.NodeValidatorBuilder _svgValidator;
 
-  // The plotter to render.
+  /// The plotter to render.
   Plotter _plotter;
 
-  // The start dx when panning the view.
+  /// The start dx when panning the view.
   double _startdx;
 
-  // The start dy when panning the view.
+  /// The start dy when panning the view.
   double _startdy;
 
-  // The initial mouse x location on a mouse pressed.
+  /// The initial mouse x location on a mouse pressed.
   int _msx;
 
-  // The initial mouse y location on a mouse pressed.
+  /// The initial mouse y location on a mouse pressed.
   int _msy;
 
-  // True indicates a mouse pan has been started.
+  /// True indicates a mouse pan has been started.
   bool _panStarted;
 
-  /**
-     * Creates a plotter that outputs SVG.
-     */
+  /// Creates a plotter that outputs SVG.
   PlotSvg(this._targetDivId, this._plotter) {
-    this._svgValidator = new dom.NodeValidatorBuilder()..allowSvg();
-    this._targetDiv = dom.querySelector('#' + this._targetDivId);
-    this._startdx = 0.0;
-    this._startdy = 0.0;
-    this._msx = 0;
-    this._msy = 0;
-    this._panStarted = false;
+    _svgValidator = new dom.NodeValidatorBuilder()..allowSvg();
+    _targetDiv = dom.querySelector('#' + _targetDivId);
+    _startdx = 0.0;
+    _startdy = 0.0;
+    _msx = 0;
+    _msy = 0;
+    _panStarted = false;
 
-    this._targetDiv.onResize.listen((e) => this._draw());
-    this._targetDiv.onMouseDown.listen((e) => this._mouseDown(e));
-    this._targetDiv.onMouseMove.listen((e) => this._mouseMove(e));
-    this._targetDiv.onMouseUp.listen((e) => this._mouseUp(e));
-    this._targetDiv.onMouseWheel.listen((e) => this._mouseWheelMoved(e));
-    this._draw();
+    _targetDiv.onResize.listen((e) => _draw());
+    _targetDiv.onMouseDown.listen((e) => _mouseDown(e));
+    _targetDiv.onMouseMove.listen((e) => _mouseMove(e));
+    _targetDiv.onMouseUp.listen((e) => _mouseUp(e));
+    _targetDiv.onMouseWheel.listen((e) => _mouseWheelMoved(e));
+    _draw();
   }
 
-  /**
-     * The width of the div that is being plotted to.
-     */
-  double _width() {
-    return this._targetDiv.clientWidth.toDouble();
-  }
+  /// The width of the div that is being plotted to.
+  double get _width => _targetDiv.clientWidth.toDouble();
 
-  /**
-     * The height of the div that is being plotted to.
-     */
-  double _height() {
-    return this._targetDiv.clientHeight.toDouble();
-  }
+  /// The height of the div that is being plotted to.
+  double get _height => _targetDiv.clientHeight.toDouble();
 
-  /**
-     * Gets the transformer for the plot target div.
-     */
-  Transformer _trans() {
-    double width = this._width();
-    double height = this._height();
+  /// Gets the transformer for the plot target div.
+  Transformer get _trans {
+    double width = _width;
+    double height = _height;
     double size = math.min(width, height);
     return new Transformer(size, size, 0.5 * width, 0.5 * height);
   }
 
-  /**
-     * Draws to the target with SVG.
-     */
+  /// Draws to the target with SVG.
   void _draw() {
-    double width = this._width();
-    double height = this._height();
+    double width = _width;
+    double height = _height;
     Bounds window = new Bounds(0.0, 0.0, width, height);
 
-    var r = new Renderer(window, this._trans());
+    var r = new Renderer(window, _trans);
     r.clear();
-    this._plotter.render(r);
-    var svg = r.output();
+    _plotter.render(r);
+    var svg = r.output;
 
     _targetDiv.setInnerHtml(svg, validator: _svgValidator);
   }
 
-  /**
-     * Called when the mouse button is pressed on the panel.
-     * @param e The mouse event for the button pressed.
-     */
+  /// Called when the mouse button is pressed on the panel.
   void _mouseDown(dom.MouseEvent e) {
     e.stopPropagation();
     if (e.button == 0) {
-      this._panStarted = true;
-      this._msx = e.client.x;
-      this._msy = e.client.y;
-      this._startdx = this._plotter.view().dx();
-      this._startdy = this._plotter.view().dy();
+      _panStarted = true;
+      _msx = e.client.x;
+      _msy = e.client.y;
+      _startdx = _plotter.view.dx;
+      _startdy = _plotter.view.dy;
     }
   }
 
-  /**
-     * Called when the mouse is moved with the button down.
-     * @param e The mouse event for the drag.
-     */
+  /// Called when the mouse is moved with the button down.
   void _mouseMove(dom.MouseEvent e) {
     e.stopPropagation();
-    if (this._panStarted) {
-      double scale = math.min(this._width(), this._height());
-      double dx = (e.client.x - this._msx).toDouble() / scale;
-      double dy = (this._msy - e.client.y).toDouble() / scale;
-      this._plotter.setViewOffset(dx + this._startdx, dy + this._startdy);
-      this._draw();
+    if (_panStarted) {
+      double scale = math.min(_width, _height);
+      double dx = (e.client.x - _msx).toDouble() / scale;
+      double dy = (_msy - e.client.y).toDouble() / scale;
+      _plotter.setViewOffset(dx + _startdx, dy + _startdy);
+      _draw();
     }
   }
 
-  /**
-     * Called when the mouse button is released.
-     * @param e The mouse event for the button release.
-     */
+  /// Called when the mouse button is released.
   void _mouseUp(dom.MouseEvent e) {
     e.stopPropagation();
-    this._panStarted = false;
+    _panStarted = false;
   }
 
-  /**
-     * Called when the mouse wheel is moved.
-     * @param e The mouse event for the wheel move.
-     */
+  /// Called when the mouse wheel is moved.
   void _mouseWheelMoved(dom.WheelEvent e) {
     e.stopPropagation();
     e.preventDefault();
-    Transformer trans = this._trans();
+    Transformer trans = _trans;
     double dx = trans.untransformX(e.client.x.toDouble());
-    double dy = trans.untransformY(this._height() - e.client.y.toDouble());
+    double dy = trans.untransformY(_height - e.client.y.toDouble());
     double dw = e.deltaY.toDouble() / 1000.0;
-    this._plotter.deltaViewZoom(dx, dy, dw);
-    this._draw();
+    _plotter.deltaViewZoom(dx, dy, dw);
+    _draw();
   }
 }
