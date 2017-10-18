@@ -63,9 +63,30 @@ class Group extends PlotterItem {
     return item;
   }
 
+  /// Adds a rectangle plotter item with the given data.
+  Rectangles addRects(List<double> items) {
+    Rectangles item = new Rectangles()..add(items);
+    add([item]);
+    return item;
+  }
+
+  /// Adds a circle plotter item with the given data.
+  Circles addCircles(List<double> items) {
+    Circles item = new Circles()..add(items);
+    add([item]);
+    return item;
+  }
+
+  /// Adds a ellipses plotter item with the given data.
+  Ellipses addEllipses(List<double> items) {
+    Ellipses item = new Ellipses()..add(items);
+    add([item]);
+    return item;
+  }
+
   /// Adds a child group item with the given items.
-  Group addGroup(List<PlotterItem> items) {
-    Group item = new Group()..add(items);
+  Group addGroup([String label = "", bool enabled = true]) {
+    Group item = new Group()..label=label..enabled=enabled;
     add([item]);
     return item;
   }

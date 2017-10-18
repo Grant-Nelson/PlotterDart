@@ -50,24 +50,18 @@ const double _maxZoom = 1.0e+6;
 ///   plot.updateBounds();
 ///   plot.focusOnData();
 ///   plot.show();
-class Plotter {
+class Plotter extends Group {
   /// The data bounds for the item's data.
   Bounds _bounds;
 
   /// The transformer from the window to the view.
   Transformer _viewTrans;
 
-  /// The items to plot.
-  List<PlotterItem> _items;
-
   /// Creates a new plotter.
-  Plotter() {
+  Plotter([String label = ""]) : super(label){
     _bounds = new Bounds.empty();
     _viewTrans = new Transformer.identity();
-    _items = new List<PlotterItem>();
-
-    _items.add(new Grid());
-    _items.add(new DataBounds());
+    add([new Grid(), new DataBounds()]);
   }
 
   /// Focuses on the data.
@@ -82,56 +76,10 @@ class Plotter {
     }
   }
 
-  /// The number of items in the plotter.
-  int get count => _items.length;
-
-  /// The list of items in the plotter.
-  List<PlotterItem> get items => _items;
-
-  /// Adds plotter items to the plotter.
-  void add(PlotterItem item) => _items.add(item);
-
-  /// Adds a points plotter item with the given data.
-  Points addPoints(List<double> val) {
-    Points item = new Points()..add(val);
-    add(item);
-    return item;
-  }
-
-  /// Adds a lines plotter item with the given data.
-  Lines addLines(List<double> val) {
-    Lines item = new Lines()..add(val);
-    add(item);
-    return item;
-  }
-
-  /// Adds a line strip plotter item with the given data.
-  LineStrip addLineStrip(List<double> val) {
-    LineStrip item = new LineStrip()..add(val);
-    add(item);
-    return item;
-  }
-
-  /// Adds a polygon plotter item with the given data.
-  Polygon addPolygon(List<double> val) {
-    Polygon item = new Polygon()..add(val);
-    add(item);
-    return item;
-  }
-
-  /// Adds a child group item with the given items.
-  Group addGroup(List<PlotterItem> items) {
-    Group item = new Group()..add(items);
-    add(item);
-    return item;
-  }
-
   /// Updates the bounds of the data.
   /// This should be called whenever the data has changed.
   void updateBounds() {
-    Bounds b = new Bounds.empty();
-    for (PlotterItem item in _items) b.union(item.getBounds(_viewTrans));
-    _bounds = b;
+    _bounds = _onGetBounds(_viewTrans);
   }
 
   /// Renders the plot with the given renderer.
@@ -140,10 +88,8 @@ class Plotter {
     Transformer trans = r.transform;
     trans = trans.mul(_viewTrans);
     r.transform = trans;
-    for (PlotterItem item in _items) {
-      r.color = new Color(0.0, 0.0, 0.0);
-      item.draw(r);
-    }
+    r.color = new Color(0.0, 0.0, 0.0);
+    _onDraw(r);
   }
 
   /// The transformation from window space to view space.
