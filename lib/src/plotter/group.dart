@@ -85,8 +85,9 @@ class Group extends PlotterItem {
   }
 
   /// Adds a child group item with the given items.
-  Group addGroup([String label = "", bool enabled = true]) {
+  Group addGroup([String label = "", List<PlotterItem> items = null, bool enabled = true]) {
     Group item = new Group()..label=label..enabled=enabled;
+    if (items != null) item.add(items);
     add([item]);
     return item;
   }
