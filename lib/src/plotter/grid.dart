@@ -104,6 +104,11 @@ class Grid extends PlotterItem {
         _getMaxPow(view.height * 5.0 / window.height));
 
     int diff = maxPow - minPow;
+    if (diff <= 0) {
+      diff = 1;
+      maxPow = 1;
+      minPow = 0;
+    }
     double pow = math.pow(10, maxPow - 1);
     double maxXOffset = _getUpper(view.xmax, pow);
     double minXOffset = _getLower(view.xmin, pow);
