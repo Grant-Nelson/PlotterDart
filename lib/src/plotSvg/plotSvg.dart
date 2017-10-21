@@ -64,6 +64,7 @@ class PlotSvg {
     double width = _width;
     double height = _height;
     double size = math.min(width, height);
+    if (size <= 0.0) size = 1.0;
     return new Transformer(size, size, 0.5 * width, 0.5 * height);
   }
 
@@ -72,7 +73,6 @@ class PlotSvg {
     double width = _width;
     double height = _height;
     Bounds window = new Bounds(0.0, 0.0, width, height);
-
     var r = new Renderer(window, _trans);
     r.clear();
     _plotter.render(r);
@@ -116,8 +116,8 @@ class PlotSvg {
     e.stopPropagation();
     e.preventDefault();
     Transformer trans = _trans;
-    double dx = trans.untransformX(e.client.x.toDouble());
-    double dy = trans.untransformY(_height - e.client.y.toDouble());
+    double dx = trans.untransformX(e.offset.x.toDouble());
+    double dy = trans.untransformY(_height - e.offset.y.toDouble());
     double dw = e.deltaY.toDouble() / 1000.0;
     _plotter.deltaViewZoom(dx, dy, dw);
     _draw();

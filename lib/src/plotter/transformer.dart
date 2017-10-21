@@ -27,7 +27,10 @@ class Transformer {
   }
 
   /// Creates a new transformer.
-  Transformer(this._xScalar, this._yScalar, this._dx, this._dy);
+  Transformer(this._xScalar, this._yScalar, this._dx, this._dy) {
+    assert(_xScalar > 0.0);
+    assert(_yScalar > 0.0);
+  }
 
   /// Creates a copy of the given transformer.
   Transformer.copy(Transformer other) {
@@ -48,8 +51,10 @@ class Transformer {
   /// Sets the scalars of the transformation.
   /// The scalars should be positive and non-zero.
   void setScale(double xScalar, double yScalar) {
-    this._xScalar = xScalar;
-    this._yScalar = yScalar;
+    _xScalar = xScalar;
+    _yScalar = yScalar;
+    assert(_xScalar > 0.0);
+    assert(_yScalar > 0.0);
   }
 
   /// Gets the x-axis scalar.
