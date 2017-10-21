@@ -46,8 +46,8 @@ class Grid extends PlotterItem {
   /// [minOffset] is the minimum offset into the view.
   /// [maxOffset] is the maximum offset into the view.
   /// [rmdPow] is the current offset of the power to get the lines for.
-  void _getHorzs(List<List<double>> groups, Bounds window, Bounds view,
-      double pow, double minOffset, double maxOffset, int rmdPow) {
+  void _getHorzs(List<List<double>> groups, Bounds window, Bounds view, double pow, double minOffset, double maxOffset,
+      int rmdPow) {
     if (rmdPow <= 0) return;
     double lowPow = pow / 10.0;
     double offset = minOffset;
@@ -74,8 +74,8 @@ class Grid extends PlotterItem {
   /// [minOffset] is the minimum offset into the view.
   /// [maxOffset] is the maximum offset into the view.
   /// [rmdPow] is the current offset of the power to get the lines for.
-  void _getVerts(List<List<double>> groups, Bounds window, Bounds view,
-      double pow, double minOffset, double maxOffset, int rmdPow) {
+  void _getVerts(List<List<double>> groups, Bounds window, Bounds view, double pow, double minOffset, double maxOffset,
+      int rmdPow) {
     if (rmdPow <= 0) return;
     double lowPow = pow / 10.0;
     double offset = minOffset;
@@ -91,8 +91,7 @@ class Grid extends PlotterItem {
   void _setColor(IRenderer r, int rmdPow, int diff) {
     double fraction = rmdPow / diff;
     double red = _backClr.red + fraction * (_foreClr.red - _backClr.red);
-    double green =
-        _backClr.green + fraction * (_foreClr.green - _backClr.green);
+    double green = _backClr.green + fraction * (_foreClr.green - _backClr.green);
     double blue = _backClr.blue + fraction * (_foreClr.blue - _backClr.blue);
     r.color = new Color(red, green, blue);
   }
@@ -100,8 +99,7 @@ class Grid extends PlotterItem {
   /// Draws the grid lines.
   void _drawGrid(IRenderer r, Bounds window, Bounds view) {
     int maxPow = math.max(_getMaxPow(view.width), _getMaxPow(view.height));
-    int minPow = math.min(_getMaxPow(view.width * 5.0 / window.width),
-        _getMaxPow(view.height * 5.0 / window.height));
+    int minPow = math.min(_getMaxPow(view.width * 5.0 / window.width), _getMaxPow(view.height * 5.0 / window.height));
 
     int diff = maxPow - minPow;
     if (diff <= 0) {

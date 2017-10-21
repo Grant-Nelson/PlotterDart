@@ -79,15 +79,14 @@ class Transformer {
   /// Creates a transformer which is the multiple of this transformer and the given transformer.
   // Transformers are not commutative when multiplying since they are coordinate transformations just like matrices.
   Transformer mul(Transformer trans) {
-    return new Transformer(_xScalar * trans._xScalar, _yScalar * trans._yScalar,
-        transformX(trans._dx), transformY(trans._dy));
+    return new Transformer(
+        _xScalar * trans._xScalar, _yScalar * trans._yScalar, transformX(trans._dx), transformY(trans._dy));
   }
 
   /// Transforms a bounds from the source coordinate system into the destination coordinate system.
   Bounds transform(Bounds b) {
     if (b.isEmpty) return new Bounds.empty();
-    return new Bounds(untransformX(b.xmin), untransformY(b.ymin),
-        untransformX(b.xmax), untransformY(b.ymax));
+    return new Bounds(untransformX(b.xmin), untransformY(b.ymin), untransformX(b.xmax), untransformY(b.ymax));
   }
 
   /// Performs an inverse transformation on the given x value.

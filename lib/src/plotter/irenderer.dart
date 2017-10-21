@@ -46,31 +46,25 @@ abstract class IRenderer {
   void drawLine(double x1, double y1, double x2, double y2);
 
   /// Draws a set of lines to the viewport.
-  void drawLines(List<double> x1Coords, List<double> y1Coords,
-      List<double> x2Coords, List<double> y2Coords);
+  void drawLines(List<double> x1Coords, List<double> y1Coords, List<double> x2Coords, List<double> y2Coords);
 
   /// Draws a rectangle to the viewport.
   void drawRect(double x1, double y1, double x2, double y2);
 
   /// Draws a set of rectangles to the viewport.
-  void drawRects(List<double> xCoords, List<double> yCoords,
-      List<double> widths, List<double> heights);
+  void drawRects(List<double> xCoords, List<double> yCoords, List<double> widths, List<double> heights);
 
   /// Draws a set of rectangles to the viewport.
-  void drawRectSet(
-      List<double> xCoords, List<double> yCoords, double width, double height);
+  void drawRectSet(List<double> xCoords, List<double> yCoords, double width, double height);
 
   /// Draws a set of ellips to the viewport.
-  void drawEllips(List<double> xCoords, List<double> yCoords,
-      List<double> widths, List<double> heights);
+  void drawEllips(List<double> xCoords, List<double> yCoords, List<double> widths, List<double> heights);
 
   /// Draws a set of ellips to the viewport.
-  void drawEllipsSet(
-      List<double> xCoords, List<double> yCoords, double width, double height);
+  void drawEllipsSet(List<double> xCoords, List<double> yCoords, double width, double height);
 
   /// Draws a set of circles to the viewport.
-  void drawCircs(
-      List<double> xCoords, List<double> yCoords, List<double> radius);
+  void drawCircs(List<double> xCoords, List<double> yCoords, List<double> radius);
 
   /// Draws a set of circles to the viewport.
   void drawCircSet(List<double> xCoords, List<double> yCoords, double radius);

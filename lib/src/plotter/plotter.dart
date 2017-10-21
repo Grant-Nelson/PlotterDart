@@ -58,7 +58,7 @@ class Plotter extends Group {
   Transformer _viewTrans;
 
   /// Creates a new plotter.
-  Plotter([String label = ""]) : super(label){
+  Plotter([String label = ""]) : super(label) {
     _bounds = new Bounds.empty();
     _viewTrans = new Transformer.identity();
     add([new Grid(), new DataBounds()]);
@@ -71,8 +71,7 @@ class Plotter extends Group {
     if (!_bounds.isEmpty) {
       double scale = 0.95 / math.max(_bounds.width, _bounds.height);
       _viewTrans.setScale(scale, scale);
-      _viewTrans.setOffset(-0.5 * (_bounds.xmin + _bounds.xmax) * scale,
-          -0.5 * (_bounds.ymin + _bounds.ymax) * scale);
+      _viewTrans.setOffset(-0.5 * (_bounds.xmin + _bounds.xmax) * scale, -0.5 * (_bounds.ymin + _bounds.ymax) * scale);
     }
   }
 

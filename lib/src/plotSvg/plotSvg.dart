@@ -1,6 +1,6 @@
 library plotSvg;
 
-import 'dart:html' as dom;
+import 'dart:html' as html;
 import 'dart:math' as math;
 import '../plotter/plotter.dart';
 
@@ -8,14 +8,11 @@ part 'renderer.dart';
 
 /// Plotter renderer which outputs SVG.
 class PlotSvg {
-  /// The identifier of the target html dive to write to.
-  final String _targetDivId;
-
   /// The target html div to write to.
-  dom.Element _targetDiv;
+  html.Element _targetDiv;
 
   /// The SVG html validator.
-  dom.NodeValidatorBuilder _svgValidator;
+  html.NodeValidatorBuilder _svgValidator;
 
   /// The plotter to render.
   Plotter _plotter;
@@ -36,9 +33,9 @@ class PlotSvg {
   bool _panStarted;
 
   /// Creates a plotter that outputs SVG.
-  PlotSvg(this._targetDivId, this._plotter) {
-    _svgValidator = new dom.NodeValidatorBuilder()..allowSvg();
-    _targetDiv = dom.querySelector('#' + _targetDivId);
+  PlotSvg.fromElem(html.Element div, this._plotter) {
+    _svgValidator = new html.NodeValidatorBuilder()..allowSvg();
+    _targetDiv = div;
     _startdx = 0.0;
     _startdy = 0.0;
     _msx = 0;
@@ -51,6 +48,11 @@ class PlotSvg {
     _targetDiv.onMouseUp.listen((e) => _mouseUp(e));
     _targetDiv.onMouseWheel.listen((e) => _mouseWheelMoved(e));
     _draw();
+  }
+
+  /// Creates a plotter that outputs SVG.
+  factory PlotSvg(String targetDivId, Plotter plot) {
+    return new PlotSvg.fromElem(html.querySelector('#' + targetDivId), plot);
   }
 
   /// The width of the div that is being plotted to.
@@ -82,7 +84,7 @@ class PlotSvg {
   }
 
   /// Called when the mouse button is pressed on the panel.
-  void _mouseDown(dom.MouseEvent e) {
+  void _mouseDown(html.MouseEvent e) {
     e.stopPropagation();
     if (e.button == 0) {
       _panStarted = true;
@@ -94,7 +96,7 @@ class PlotSvg {
   }
 
   /// Called when the mouse is moved with the button down.
-  void _mouseMove(dom.MouseEvent e) {
+  void _mouseMove(html.MouseEvent e) {
     e.stopPropagation();
     if (_panStarted) {
       double scale = math.min(_width, _height);
@@ -106,13 +108,13 @@ class PlotSvg {
   }
 
   /// Called when the mouse button is released.
-  void _mouseUp(dom.MouseEvent e) {
+  void _mouseUp(html.MouseEvent e) {
     e.stopPropagation();
     _panStarted = false;
   }
 
   /// Called when the mouse wheel is moved.
-  void _mouseWheelMoved(dom.WheelEvent e) {
+  void _mouseWheelMoved(html.WheelEvent e) {
     e.stopPropagation();
     e.preventDefault();
     Transformer trans = _trans;

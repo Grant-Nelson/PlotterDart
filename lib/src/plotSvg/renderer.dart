@@ -100,8 +100,7 @@ class Renderer extends IRenderer {
     String backClr = _getColorString(_backClr);
     var width = _window.width;
     var height = _window.height;
-    _sout.writeln(
-        "<svg viewBox=\"0 0 $width $height\" style=\"background-color: $backClr\";>");
+    _sout.writeln("<svg viewBox=\"0 0 $width $height\" style=\"background-color: $backClr\";>");
   }
 
   /// Draws a point to the viewport.
@@ -152,8 +151,7 @@ class Renderer extends IRenderer {
   }
 
   /// Draws a set of lines to the viewport.
-  void drawLines(List<double> x1Coords, List<double> y1Coords,
-      List<double> x2Coords, List<double> y2Coords) {
+  void drawLines(List<double> x1Coords, List<double> y1Coords, List<double> x2Coords, List<double> y2Coords) {
     for (int i = x1Coords.length - 1; i >= 0; --i) {
       drawLine(x1Coords[i], y1Coords[i], x2Coords[i], y2Coords[i]);
     }
@@ -171,8 +169,7 @@ class Renderer extends IRenderer {
   }
 
   /// Draws a set of rectangles to the viewport.
-  void drawRects(List<double> xCoords, List<double> yCoords,
-      List<double> widths, List<double> heights) {
+  void drawRects(List<double> xCoords, List<double> yCoords, List<double> widths, List<double> heights) {
     for (int i = xCoords.length - 1; i >= 0; --i) {
       double x = xCoords[i];
       double y = yCoords[i];
@@ -181,8 +178,7 @@ class Renderer extends IRenderer {
   }
 
   /// Draws a set of rectangles to the viewport.
-  void drawRectSet(
-      List<double> xCoords, List<double> yCoords, double width, double height) {
+  void drawRectSet(List<double> xCoords, List<double> yCoords, double width, double height) {
     for (int i = xCoords.length - 1; i >= 0; --i) {
       double x = xCoords[i];
       double y = yCoords[i];
@@ -214,8 +210,7 @@ class Renderer extends IRenderer {
   }
 
   /// Draws a set of ellipses to the viewport.
-  void drawEllips(List<double> xCoords, List<double> yCoords,
-      List<double> widths, List<double> heights) {
+  void drawEllips(List<double> xCoords, List<double> yCoords, List<double> widths, List<double> heights) {
     for (int i = xCoords.length - 1; i >= 0; --i) {
       double x = xCoords[i];
       double y = yCoords[i];
@@ -224,8 +219,7 @@ class Renderer extends IRenderer {
   }
 
   /// Draws a set of ellipses to the viewport.
-  void drawEllipsSet(
-      List<double> xCoords, List<double> yCoords, double width, double height) {
+  void drawEllipsSet(List<double> xCoords, List<double> yCoords, double width, double height) {
     for (int i = xCoords.length - 1; i >= 0; --i) {
       double x = xCoords[i];
       double y = yCoords[i];
@@ -234,8 +228,7 @@ class Renderer extends IRenderer {
   }
 
   /// Draws a set of circles to the viewport.
-  void drawCircs(
-      List<double> xCoords, List<double> yCoords, List<double> radius) {
+  void drawCircs(List<double> xCoords, List<double> yCoords, List<double> radius) {
     for (int i = xCoords.length - 1; i >= 0; --i) {
       double r = radius[i];
       double cx = xCoords[i];
@@ -307,26 +300,22 @@ class Renderer extends IRenderer {
 
   /// Writes a point SVG to the buffer.
   void _writePoint(double x, double y, double r) {
-    _sout.writeln(
-        "  <circle cx=\"$x\" cy=\"$y\" r=\"$r\" fill=\"$_fillClrStr\" />");
+    _sout.writeln("  <circle cx=\"$x\" cy=\"$y\" r=\"$r\" fill=\"$_fillClrStr\" />");
   }
 
   /// Writes a line SVG to the buffer.
   void _writeLine(double x1, double y1, double x2, double y2) {
-    _sout.writeln(
-        "  <line x1=\"$x1\" y1=\"$y1\" x2=\"$x2\" y2=\"$y2\" $_lineClrStr/>");
+    _sout.writeln("  <line x1=\"$x1\" y1=\"$y1\" x2=\"$x2\" y2=\"$y2\" $_lineClrStr/>");
   }
 
   /// Writes a rectangle SVG to the buffer.
   void _writeRect(double x, double y, double width, double height) {
-    _sout.writeln(
-        "  <rect x=\"$x\" y=\"$y\" width=\"$width\" height=\"$height\" $_fillClrStr$_lineClrStr/>");
+    _sout.writeln("  <rect x=\"$x\" y=\"$y\" width=\"$width\" height=\"$height\" $_fillClrStr$_lineClrStr/>");
   }
 
   /// Writes an ellipse SVG to the buffer.
   void _writeEllipse(double cx, double cy, double rx, double ry) {
-    _sout.write(
-        "  <ellipse cx=\"$cx\" cy=\"$cy\" rx=\"$rx\" ry=\"$ry\" $_fillClrStr$_lineClrStr/>");
+    _sout.write("  <ellipse cx=\"$cx\" cy=\"$cy\" rx=\"$rx\" ry=\"$ry\" $_fillClrStr$_lineClrStr/>");
   }
 
   /// Translates the given x value by the current transformer.

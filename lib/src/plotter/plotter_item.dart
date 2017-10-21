@@ -24,8 +24,7 @@ abstract class PlotterItem {
   void addPointSize(double size) => addAttr(new PointSizeAttr(size));
 
   /// Adds a filled attribute to this item.
-  void addFillColor(double red, double green, double blue,
-          [double alpha = 1.0]) =>
+  void addFillColor(double red, double green, double blue, [double alpha = 1.0]) =>
       addAttr(new FillColorAttr.rgb(red, green, blue, alpha));
 
   /// Adds a directed line attribute to this item.
