@@ -26,6 +26,9 @@ class Renderer extends IRenderer {
   /// The CSS draw color currently set.
   String _lineClrStr;
 
+  /// The CSS draw color currently set.
+  String _pointClrStr;
+
   /// The current fill color or null for no fill.
   Color _fillClr;
 
@@ -77,6 +80,7 @@ class Renderer extends IRenderer {
     _lineClr = color;
     String drawClr = _getColorString(color);
     _lineClrStr = "stroke=\"$drawClr\" stroke-opacity=\"${color.alpha}\" ";
+    _pointClrStr = "fill=\"$drawClr\" fill-opacity=\"${color.alpha}\" ";
   }
 
   /// The color to fill shapes with.
@@ -113,6 +117,7 @@ class Renderer extends IRenderer {
 
   /// Draws a set of points to the viewport.
   void drawPoints(List<double> xCoords, List<double> yCoords) {
+    assert(xCoords.length == yCoords.length);
     for (int i = xCoords.length - 1; i >= 0; --i) {
       drawPoint(xCoords[i], yCoords[i]);
     }
@@ -129,7 +134,7 @@ class Renderer extends IRenderer {
     if (_lineDir) {
       double dx = x2 - x1;
       double dy = y2 - y1;
-      double length = math.sqrt(dx * dx + dy * dy);
+      double length = math.sqrt((dx * dx) + (dy * dy));
       if (length > 1.0e-12) {
         dx /= length;
         dy /= length;
@@ -137,7 +142,7 @@ class Renderer extends IRenderer {
         double height = 4.0;
         double tx3 = tx2 - dx * width;
         double dx3 = dy * height;
-        double ty3 = tx2 + dy * width;
+        double ty3 = ty2 + dy * width;
         double dy3 = dx * height;
         _writeLine(tx2, ty2, tx3 + dx3, ty3 + dy3);
         _writeLine(tx2, ty2, tx3 - dx3, ty3 - dy3);
@@ -152,6 +157,9 @@ class Renderer extends IRenderer {
 
   /// Draws a set of lines to the viewport.
   void drawLines(List<double> x1Coords, List<double> y1Coords, List<double> x2Coords, List<double> y2Coords) {
+    assert(x1Coords.length == y1Coords.length);
+    assert(x1Coords.length == x2Coords.length);
+    assert(x1Coords.length == y2Coords.length);
     for (int i = x1Coords.length - 1; i >= 0; --i) {
       drawLine(x1Coords[i], y1Coords[i], x2Coords[i], y2Coords[i]);
     }
@@ -170,6 +178,9 @@ class Renderer extends IRenderer {
 
   /// Draws a set of rectangles to the viewport.
   void drawRects(List<double> xCoords, List<double> yCoords, List<double> widths, List<double> heights) {
+    assert(xCoords.length == yCoords.length);
+    assert(xCoords.length == widths.length);
+    assert(xCoords.length == heights.length);
     for (int i = xCoords.length - 1; i >= 0; --i) {
       double x = xCoords[i];
       double y = yCoords[i];
@@ -179,6 +190,7 @@ class Renderer extends IRenderer {
 
   /// Draws a set of rectangles to the viewport.
   void drawRectSet(List<double> xCoords, List<double> yCoords, double width, double height) {
+    assert(xCoords.length == yCoords.length);
     for (int i = xCoords.length - 1; i >= 0; --i) {
       double x = xCoords[i];
       double y = yCoords[i];
@@ -211,6 +223,9 @@ class Renderer extends IRenderer {
 
   /// Draws a set of ellipses to the viewport.
   void drawEllips(List<double> xCoords, List<double> yCoords, List<double> widths, List<double> heights) {
+    assert(xCoords.length == yCoords.length);
+    assert(xCoords.length == widths.length);
+    assert(xCoords.length == heights.length);
     for (int i = xCoords.length - 1; i >= 0; --i) {
       double x = xCoords[i];
       double y = yCoords[i];
@@ -220,6 +235,7 @@ class Renderer extends IRenderer {
 
   /// Draws a set of ellipses to the viewport.
   void drawEllipsSet(List<double> xCoords, List<double> yCoords, double width, double height) {
+    assert(xCoords.length == yCoords.length);
     for (int i = xCoords.length - 1; i >= 0; --i) {
       double x = xCoords[i];
       double y = yCoords[i];
@@ -229,6 +245,8 @@ class Renderer extends IRenderer {
 
   /// Draws a set of circles to the viewport.
   void drawCircs(List<double> xCoords, List<double> yCoords, List<double> radius) {
+    assert(xCoords.length == yCoords.length);
+    assert(xCoords.length == radius.length);
     for (int i = xCoords.length - 1; i >= 0; --i) {
       double r = radius[i];
       double cx = xCoords[i];
@@ -245,6 +263,7 @@ class Renderer extends IRenderer {
 
   /// Draws a set of circles to the viewport.
   void drawCircSet(List<double> xCoords, List<double> yCoords, double radius) {
+    assert(xCoords.length == yCoords.length);
     for (int i = xCoords.length - 1; i >= 0; --i) {
       double cx = xCoords[i];
       double cy = yCoords[i];
@@ -260,6 +279,7 @@ class Renderer extends IRenderer {
 
   /// Draws a polygon to the viewport.
   void drawPoly(List<double> xCoords, List<double> yCoords) {
+    assert(xCoords.length == yCoords.length);
     int count = xCoords.length;
     if (count >= 3) {
       double x = _transX(xCoords[0]);
@@ -280,6 +300,7 @@ class Renderer extends IRenderer {
 
   /// Draws a line strip to the viewport.
   void drawStrip(List<double> xCoords, List<double> yCoords) {
+    assert(xCoords.length == yCoords.length);
     int count = xCoords.length;
     if (count >= 2) {
       double x = _transX(xCoords[0]);
@@ -300,7 +321,7 @@ class Renderer extends IRenderer {
 
   /// Writes a point SVG to the buffer.
   void _writePoint(double x, double y, double r) {
-    _sout.writeln("  <circle cx=\"$x\" cy=\"$y\" r=\"$r\" fill=\"$_fillClrStr\" />");
+    _sout.writeln("  <circle cx=\"$x\" cy=\"$y\" r=\"$r\" $_pointClrStr />");
   }
 
   /// Writes a line SVG to the buffer.
