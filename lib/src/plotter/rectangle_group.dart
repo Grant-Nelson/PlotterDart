@@ -1,12 +1,7 @@
 part of plotter;
 
 /// A plotter item for drawing rectangles.
-class RectangleGroup extends PlotterItem {
-  /// The x value for the top-left corner points.
-  List<double> _xCoords;
-
-  /// The y value for the top-left corner points.
-  List<double> _yCoords;
+class RectangleGroup extends BasicCoordsItem {
 
   /// The width of all the rectangles.
   double _width;
@@ -15,10 +10,10 @@ class RectangleGroup extends PlotterItem {
   double _height;
 
   /// Creates a new rectangle plotter item.
-  RectangleGroup(this._width, this._height) {
-    _xCoords = new List<double>();
-    _yCoords = new List<double>();
-  }
+  RectangleGroup(this._width, this._height) : super._(2);
+
+  List<double> get _x => _coords[0];
+  List<double> get _y => _coords[1];
 
   /// The width for all the rectangles.
   double get width => _width;
@@ -28,27 +23,15 @@ class RectangleGroup extends PlotterItem {
   double get height => _height;
   set height(double height) => _height = height;
 
-  /// Adds rectangles to this plotter item.
-  void add(List<double> val) {
-    int count = val.length;
-    for (int i = 0; i < count; i += 2) {
-      _xCoords.add(val[i]);
-      _yCoords.add(val[i + 1]);
-    }
-  }
-
-  /// The number of rectangles in this item.
-  int get count => _xCoords.length;
-
   /// Draws the group to the panel.
   void _onDraw(IRenderer r) {
-    r.drawRectSet(_xCoords, _yCoords, _width, _height);
+    r.drawRectSet(_x, _y, _width, _height);
   }
 
   /// Gets the bounds for the item.
   Bounds _onGetBounds(Transformer trans) {
     Bounds b = new Bounds.empty();
-    for (int i = count - 1; i >= 0; --i) b.expand(_xCoords[i], _yCoords[i]);
+    for (int i = count - 1; i >= 0; --i) b.expand(_x[i], _y[i]);
     if (!b.isEmpty) b.expand(b.xmax + _width, b.ymax + _height);
     return trans.transform(b);
   }

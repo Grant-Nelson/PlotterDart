@@ -27,6 +27,9 @@ abstract class PlotterItem {
   void addFillColor(double red, double green, double blue, [double alpha = 1.0]) =>
       addAttr(new FillColorAttr.rgb(red, green, blue, alpha));
 
+  /// Adds a filled attribute indicating no fill color to this item.
+  void addNoFillColor() => addAttr(new FillColorAttr(null));
+
   /// Adds a directed line attribute to this item.
   void addDirected(bool directed) => addAttr(new DirectedLineAttr(directed));
 

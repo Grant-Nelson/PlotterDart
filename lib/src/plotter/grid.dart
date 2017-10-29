@@ -16,6 +16,7 @@ class Grid extends PlotterItem {
     _backClr = new Color(0.9, 0.9, 1.0);
     _foreClr = new Color(0.5, 0.5, 1.0);
     _axisClr = new Color(1.0, 0.7, 0.7);
+    addColor(0.0, 0.0, 0.0);
   }
 
   /// Gets the smallest power of 10 which is greater than the given value.
@@ -35,7 +36,8 @@ class Grid extends PlotterItem {
 
   /// Adds a horizontal line at the given offset to the given group.
   void _addHorz(List<double> group, double offset, Bounds window, Bounds view) {
-    group.add((offset - view.ymin) * window.height / view.height);
+    double y = (offset - view.ymin) * window.height / view.height;
+    if ((y > 0.0) && (y < window.height)) group.add(y);
   }
 
   /// The recursive method used to get a horizontal grid line and children grid lines.
@@ -63,7 +65,8 @@ class Grid extends PlotterItem {
 
   /// Adds a vertical line at the given offset to the given group.
   void _addVert(List<double> group, double offset, Bounds window, Bounds view) {
-    group.add((offset - view.xmin) * window.width / view.width);
+    double x = (offset - view.xmin) * window.width / view.width;
+    if ((x > 0.0) && (x < window.width)) group.add(x);
   }
 
   /// The recursive method used to get a vertical grid line and children grid lines.

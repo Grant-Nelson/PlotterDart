@@ -5,7 +5,7 @@ class DataBounds extends PlotterItem {
   /// Creates a new data bound plotter item.
   /// Adds a default color attribute.
   DataBounds() {
-    attributes.add(new ColorAttr(new Color(1.0, 0.75, 0.75)));
+    addColor(1.0, 0.75, 0.75);
   }
 
   /// Called to draw to the panel.
