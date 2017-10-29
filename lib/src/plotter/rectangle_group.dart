@@ -2,7 +2,6 @@ part of plotter;
 
 /// A plotter item for drawing rectangles.
 class RectangleGroup extends BasicCoordsItem {
-
   /// The width of all the rectangles.
   double _width;
 

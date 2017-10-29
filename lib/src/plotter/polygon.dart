@@ -2,9 +2,8 @@ part of plotter;
 
 /// The plotter item for plotting a polygon.
 class Polygon extends BasicCoordsItem {
-
   /// Creates a polygon plotter item.
-  Polygon(): super._(2);
+  Polygon() : super._(2);
 
   List<double> get _x => _coords[0];
   List<double> get _y => _coords[1];

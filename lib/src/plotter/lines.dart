@@ -3,7 +3,7 @@ part of plotter;
 /// A plotter item for drawing lines.
 class Lines extends BasicCoordsItem {
   /// Creates a new line plotter item.
-  Lines(): super._(4);
+  Lines() : super._(4);
 
   List<double> get _x1 => _coords[0];
   List<double> get _y1 => _coords[1];

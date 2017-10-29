@@ -2,9 +2,8 @@ part of plotter;
 
 /// A plotter item for drawing a line strip.
 class LineStrip extends BasicCoordsItem {
-
   /// Creates a line strip plotter item.
-  LineStrip(): super._(2);
+  LineStrip() : super._(2);
 
   List<double> get _x => _coords[0];
   List<double> get _y => _coords[1];

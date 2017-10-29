@@ -7,7 +7,7 @@ class CircleGroup extends BasicCoordsItem {
   double _radius;
 
   /// Creates a new circle plotter item.
-  CircleGroup(this._radius): super._(2);
+  CircleGroup(this._radius) : super._(2);
 
   List<double> get _lefts => _coords[0];
   List<double> get _tops => _coords[1];

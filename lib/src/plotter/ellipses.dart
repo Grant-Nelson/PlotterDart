@@ -2,9 +2,8 @@ part of plotter;
 
 /// A plotter item for drawing ellipses.
 class Ellipses extends BasicCoordsItem {
-
   /// Creates a new ellipse plotter item.
-  Ellipses(): super._(4);
+  Ellipses() : super._(4);
 
   List<double> get _lefts => _coords[0];
   List<double> get _tops => _coords[1];

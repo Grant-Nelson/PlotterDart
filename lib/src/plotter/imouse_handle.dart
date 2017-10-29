@@ -2,7 +2,6 @@ part of plotter;
 
 /// Mouse button state.
 class MouseButtonState {
-
   /// The mouse button pressed.
   final int button;
 
@@ -20,14 +19,15 @@ class MouseButtonState {
 
   /// Determines if the given state is the same as this state.
   bool equals(MouseButtonState other) {
-    return (button == other.button) && (shiftKey == other.shiftKey) &&
-      (ctrlKey == other.ctrlKey) && (altKey == other.altKey);
+    return (button == other.button) &&
+        (shiftKey == other.shiftKey) &&
+        (ctrlKey == other.ctrlKey) &&
+        (altKey == other.altKey);
   }
 }
 
 /// Mouse event arguments
 class MouseEvent {
-
   /// The bounds for the client viewport.
   final Bounds window;
 
@@ -63,7 +63,6 @@ class MouseEvent {
 
 /// A mouse handler for managing user input.
 abstract class iMouseHandle {
-
   /// handles mouse down.
   void mouseDown(MouseEvent e);
 

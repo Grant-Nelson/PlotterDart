@@ -3,7 +3,6 @@ part of plotter;
 /// A plotter item for drawing ellipses.{
 /// The points are the top-left corner of the ellipses.
 class EllipseGroup extends BasicCoordsItem {
-
   /// The width of all the ellipses.
   double _width;
 
@@ -11,7 +10,7 @@ class EllipseGroup extends BasicCoordsItem {
   double _height;
 
   /// Creates a new ellipse plotter item.
-  EllipseGroup(this._width, this._height): super._(2);
+  EllipseGroup(this._width, this._height) : super._(2);
 
   List<double> get _lefts => _coords[0];
   List<double> get _tops => _coords[1];

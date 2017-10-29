@@ -16,7 +16,6 @@ void main() {
 }
 
 class PointAdder implements plotter.iMouseHandle {
-
   plotter.Plotter _plot;
   plotter.MouseButtonState _state;
   bool _mouseDown;
@@ -40,14 +39,14 @@ class PointAdder implements plotter.iMouseHandle {
 
   void mouseMove(plotter.MouseEvent e) {
     if (_mouseDown) {
-      _points.set(_points.count-1, [e.x, e.y]);
+      _points.set(_points.count - 1, [e.x, e.y]);
       e.redraw = true;
     }
   }
 
   void mouseUp(plotter.MouseEvent e) {
     if (_mouseDown) {
-      _points.set(_points.count-1, [e.x, e.y]);
+      _points.set(_points.count - 1, [e.x, e.y]);
       _mouseDown = false;
       e.redraw = true;
     }

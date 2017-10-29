@@ -4,7 +4,7 @@ part of plotter;
 /// The coordinates are the top-left corner and radii.
 class Circles extends BasicCoordsItem {
   /// Creates a new ellipse plotter item.
-  Circles(): super._(3);
+  Circles() : super._(3);
 
   List<double> get _lefts => _coords[0];
   List<double> get _tops => _coords[1];

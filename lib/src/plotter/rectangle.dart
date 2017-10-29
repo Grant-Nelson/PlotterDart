@@ -2,9 +2,8 @@ part of plotter;
 
 /// A plotter item for drawing rectangles.
 class Rectangles extends BasicCoordsItem {
-
   /// Creates a new rectangle plotter item.
-  Rectangles(): super._(4);
+  Rectangles() : super._(4);
 
   List<double> get _lefts => _coords[0];
   List<double> get _tops => _coords[1];

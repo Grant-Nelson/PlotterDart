@@ -2,7 +2,6 @@ part of plotter;
 
 /// A plotter item for coordinate based items.
 abstract class BasicCoordsItem extends PlotterItem {
-
   /// The number of coordinate parts.
   final int _coordCount;
 
@@ -19,7 +18,7 @@ abstract class BasicCoordsItem extends PlotterItem {
   void add(List<double> val) {
     final int count = val.length;
     for (int i = 0; i < count; i += _coordCount) {
-      for (int j = 0; j < _coordCount; j++) _coords[j].add(val[i+j]);
+      for (int j = 0; j < _coordCount; j++) _coords[j].add(val[i + j]);
     }
   }
 
@@ -29,7 +28,7 @@ abstract class BasicCoordsItem extends PlotterItem {
     List<List<double>> coords = new List<List<double>>();
     for (int i = 0; i < _coordCount; i++) coords.add(new List<double>());
     for (int i = 0; i < count; i += _coordCount) {
-      for (int j = 0; j < _coordCount; j++) coords[j].add(val[i+j]);
+      for (int j = 0; j < _coordCount; j++) coords[j].add(val[i + j]);
     }
     for (int i = 0; i < _coordCount; i++) _coords[i].setAll(index, coords[i]);
   }

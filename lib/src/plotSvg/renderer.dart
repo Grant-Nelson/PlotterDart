@@ -2,7 +2,6 @@ part of plotSvg;
 
 /// A renderer for drawing SVG plots.
 class Renderer extends IRenderer {
-
   /// SVG validator for adding HTML.
   html.NodeValidatorBuilder _svgValidator;
 
@@ -326,7 +325,7 @@ class Renderer extends IRenderer {
 
   /// Appends new SVG to the SVG element.
   void _addSVG(String svg) {
-    _svg.setInnerHtml(_svg.innerHtml+svg, validator: _svgValidator);
+    _svg.setInnerHtml(_svg.innerHtml + svg, validator: _svgValidator);
   }
 
   /// Translates the given x value by the current transformer.

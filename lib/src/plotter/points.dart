@@ -2,9 +2,8 @@ part of plotter;
 
 /// A plotter item for points.
 class Points extends BasicCoordsItem {
-
   /// Creates a points plotter item.
-  Points(): super._(2);
+  Points() : super._(2);
 
   List<double> get _x => _coords[0];
   List<double> get _y => _coords[1];

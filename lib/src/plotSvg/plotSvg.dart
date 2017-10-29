@@ -73,7 +73,7 @@ class PlotSvg {
   MouseEvent _mouseLoc(html.MouseEvent e) {
     Transformer trans2 = _trans.mul(_plotter.view);
     return new MouseEvent(_window, trans2, e.client.x.toDouble(), e.client.y.toDouble(),
-      new MouseButtonState(e.button, shiftKey: e.shiftKey, ctrlKey: e.ctrlKey, altKey: e.altKey));
+        new MouseButtonState(e.button, shiftKey: e.shiftKey, ctrlKey: e.ctrlKey, altKey: e.altKey));
   }
 
   /// Called when the mouse button is pressed on the panel.
