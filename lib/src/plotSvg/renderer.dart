@@ -8,6 +8,9 @@ class Renderer extends IRenderer {
   /// The element to add graphics to.
   svg.SvgSvgElement _svg;
 
+  /// The buffer to temporarily store SVG while drawing.
+  StringBuffer _sout;
+
   /// The bounds of the panel.
   Bounds _window;
 
@@ -42,8 +45,9 @@ class Renderer extends IRenderer {
   bool _lineDir;
 
   /// Creates a new renderer.
-  Renderer(this._svg, this._window, this._trans) {
+  Renderer._(this._svg, this._window, this._trans) {
     _svgValidator = new html.NodeValidatorBuilder()..allowSvg();
+    _sout = new StringBuffer();
     _dataBounds = new Bounds.empty();
     _pointSize = 0.0;
     _backClr = new Color(1.0, 1.0, 1.0);
@@ -105,6 +109,7 @@ class Renderer extends IRenderer {
       ..width = _window.width
       ..height = _window.height;
     _svg.style.backgroundColor = _getColorString(_backClr);
+    _sout.clear();
   }
 
   /// Draws a point to the viewport.
@@ -284,15 +289,13 @@ class Renderer extends IRenderer {
     if (count >= 3) {
       double x = _transX(xCoords[0]);
       double y = _transY(yCoords[0]);
-      StringBuffer sout = new StringBuffer();
-      sout.write("<polygon points=\"$x,$y");
+      _sout.write("<polygon points=\"$x,$y");
       for (int i = 1; i < count; ++i) {
         x = _transX(xCoords[i]);
         y = _transY(yCoords[i]);
-        sout.write(" $x,$y");
+        _sout.write(" $x,$y");
       }
-      sout.writeln("\" $_fillClrStr$_lineClrStr/>");
-      _addSVG(sout.toString());
+      _sout.writeln("\" $_fillClrStr$_lineClrStr/>");
     }
 
     if (_pointSize > 1.0) {
@@ -307,15 +310,13 @@ class Renderer extends IRenderer {
     if (count >= 2) {
       double x = _transX(xCoords[0]);
       double y = _transY(yCoords[0]);
-      StringBuffer sout = new StringBuffer();
-      sout.write("<polyline points=\"$x,$y");
+      _sout.write("<polyline points=\"$x,$y");
       for (int i = 1; i < count; ++i) {
         x = _transX(xCoords[i]);
         y = _transY(yCoords[i]);
-        sout.write(" $x,$y");
+        _sout.write(" $x,$y");
       }
-      sout.writeln("\" fill=\"none\" $_lineClrStr/>");
-      _addSVG(sout.toString());
+      _sout.writeln("\" fill=\"none\" $_lineClrStr/>");
     }
 
     if (_pointSize > 1.0) {
@@ -323,9 +324,9 @@ class Renderer extends IRenderer {
     }
   }
 
-  /// Appends new SVG to the SVG element.
-  void _addSVG(String svg) {
-    _svg.setInnerHtml(_svg.innerHtml + svg, validator: _svgValidator);
+  /// Finishes the render and applies the SVG.
+  void finalize() {
+    _svg.setInnerHtml(_sout.toString(), validator: _svgValidator);
   }
 
   /// Translates the given x value by the current transformer.
@@ -348,21 +349,21 @@ class Renderer extends IRenderer {
 
   /// Writes a point SVG to the buffer.
   void _writePoint(double x, double y, double r) {
-    _addSVG("<circle cx=\"$x\" cy=\"$y\" r=\"$r\" $_pointClrStr />");
+    _sout.writeln("<circle cx=\"$x\" cy=\"$y\" r=\"$r\" $_pointClrStr />");
   }
 
   /// Writes a line SVG to the buffer.
   void _writeLine(double x1, double y1, double x2, double y2) {
-    _addSVG("<line x1=\"$x1\" y1=\"$y1\" x2=\"$x2\" y2=\"$y2\" $_lineClrStr/>");
+    _sout.writeln("<line x1=\"$x1\" y1=\"$y1\" x2=\"$x2\" y2=\"$y2\" $_lineClrStr/>");
   }
 
   /// Writes a rectangle SVG to the buffer.
   void _writeRect(double x, double y, double width, double height) {
-    _addSVG("<rect x=\"$x\" y=\"$y\" width=\"$width\" height=\"$height\" $_fillClrStr$_lineClrStr/>");
+    _sout.writeln("<rect x=\"$x\" y=\"$y\" width=\"$width\" height=\"$height\" $_fillClrStr$_lineClrStr/>");
   }
 
   /// Writes an ellipse SVG to the buffer.
   void _writeEllipse(double cx, double cy, double rx, double ry) {
-    _addSVG("<ellipse cx=\"$cx\" cy=\"$cy\" rx=\"$rx\" ry=\"$ry\" $_fillClrStr$_lineClrStr/>");
+    _sout.writeln("<ellipse cx=\"$cx\" cy=\"$cy\" rx=\"$rx\" ry=\"$ry\" $_fillClrStr$_lineClrStr/>");
   }
 }

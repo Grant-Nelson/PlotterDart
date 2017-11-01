@@ -64,15 +64,15 @@ class PlotSvg {
 
   /// Draws to the target with SVG.
   void _draw() {
-    Renderer r = new Renderer(_svg, _window, _trans);
+    Renderer r = new Renderer._(_svg, _window, _trans);
     r.clear();
     _plotter.render(r);
+    r.finalize();
   }
 
   /// Creates a mouse event for a dart mouse event.
   MouseEvent _mouseLoc(html.MouseEvent e) {
-    Transformer trans2 = _trans.mul(_plotter.view);
-    return new MouseEvent(_window, trans2, e.client.x.toDouble(), e.client.y.toDouble(),
+    return new MouseEvent(_window, _trans, e.client.x.toDouble(), e.client.y.toDouble(),
         new MouseButtonState(e.button, shiftKey: e.shiftKey, ctrlKey: e.ctrlKey, altKey: e.altKey));
   }
 

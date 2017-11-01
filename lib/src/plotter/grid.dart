@@ -102,7 +102,7 @@ class Grid extends PlotterItem {
   /// Draws the grid lines.
   void _drawGrid(IRenderer r, Bounds window, Bounds view) {
     int maxPow = math.max(_getMaxPow(view.width), _getMaxPow(view.height));
-    int minPow = math.min(_getMaxPow(view.width * 5.0 / window.width), _getMaxPow(view.height * 5.0 / window.height));
+    int minPow = math.min(_getMaxPow(view.width * 5.5 / window.width), _getMaxPow(view.height * 5.5 / window.height));
 
     int diff = maxPow - minPow;
     if (diff <= 0) {

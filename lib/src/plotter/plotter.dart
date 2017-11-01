@@ -116,38 +116,35 @@ class Plotter extends Group {
   }
 
   /// Handles mouse down events.
-  void onMouseDown(MouseEvent ms) {
-    for (iMouseHandle hndl in _msHndls) hndl.mouseDown(ms);
+  void onMouseDown(MouseEvent e) {
+    for (iMouseHandle hndl in _msHndls) hndl.mouseDown(e);
   }
 
   /// Handles mouse move events.
-  void onMouseMove(MouseEvent ms) {
-    for (iMouseHandle hndl in _msHndls) hndl.mouseMove(ms);
+  void onMouseMove(MouseEvent e) {
+    for (iMouseHandle hndl in _msHndls) hndl.mouseMove(e);
   }
 
   /// Handles mouse up events.
-  void onMouseUp(MouseEvent ms) {
-    for (iMouseHandle hndl in _msHndls) hndl.mouseUp(ms);
+  void onMouseUp(MouseEvent e) {
+    for (iMouseHandle hndl in _msHndls) hndl.mouseUp(e);
   }
 
   /// Handles mouse wheel move events.
-  void onMouseWheel(MouseEvent me, double dw) {
-    double x = me.px;
-    double y = me.py;
-    double amount = dw;
-
+  void onMouseWheel(MouseEvent e, double dw) {
     double prev = math.max(_viewTrans.xScalar, _viewTrans.yScalar);
-    double scale = math.pow(10.0, math.log(prev) / math.LN10 - amount);
+    double scale = math.pow(10.0, math.log(prev) / math.LN10 - dw);
 
-    if (scale < _minZoom)
-      scale = _minZoom;
+    if (scale < _minZoom) scale = _minZoom;
     else if (scale > _maxZoom) scale = _maxZoom;
 
+    double x = e.px;
+    double y = e.py;
     double dx = (_viewTrans.dx - x) * (scale / prev) + x;
     double dy = (_viewTrans.dy - y) * (scale / prev) + y;
+
     _viewTrans.setOffset(dx, dy);
     _viewTrans.setScale(scale, scale);
-
-    me.redraw = true;
+    e.redraw = true;
   }
 }

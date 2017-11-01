@@ -45,12 +45,12 @@ class MousePan implements iMouseHandle {
 
   /// Gets the change in the view x location.
   double _viewDX(MouseEvent e) {
-    return _viewx + (e.x - _msx) * _plot.view.xScalar / e.transformer.xScalar;
+    return _viewx + (e.x - _msx) / e.transformer.xScalar;
   }
 
   /// Gets the change in the view y location.
   double _viewDY(MouseEvent e) {
-    return _viewy - (e.y - _msy) * _plot.view.yScalar / e.transformer.yScalar;
+    return _viewy - (e.y - _msy) / e.transformer.yScalar;
   }
 
   /// handles mouse moved.

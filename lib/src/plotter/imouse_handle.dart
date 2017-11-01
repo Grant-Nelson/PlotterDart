@@ -31,7 +31,7 @@ class MouseEvent {
   /// The bounds for the client viewport.
   final Bounds window;
 
-  /// Transformer for converting from graphics coordinate system to screen coordinate system.
+  /// Transformer for converting from graphics view coordinate system to screen coordinate system.
   final Transformer transformer;
 
   /// X location of the mouse.
