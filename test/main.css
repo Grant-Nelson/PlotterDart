@@ -7,9 +7,9 @@ html, body {
 }
 
 #output {
-    width: 90%;
-    height: 90%;
-    margin: 40px;
-    padding: 40px;
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
     overflow: hidden;
 }
