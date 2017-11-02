@@ -51,7 +51,8 @@ class PlotSvg {
   double get _height => _svg.clientHeight.toDouble();
 
   /// Gets the transformer for the plot target div.
-  Transformer get _trans {
+  /// This is the projection from the view coordinates to the window coordinates.
+  Transformer get _projection {
     double width = _width;
     double height = _height;
     double size = math.min(width, height);
@@ -64,7 +65,7 @@ class PlotSvg {
 
   /// Draws to the target with SVG.
   void _draw() {
-    Renderer r = new Renderer._(_svg, _window, _trans);
+    Renderer r = new Renderer._(_svg, _window, _projection);
     r.clear();
     _plotter.render(r);
     r.finalize();
@@ -72,7 +73,7 @@ class PlotSvg {
 
   /// Creates a mouse event for a dart mouse event.
   MouseEvent _mouseLoc(html.MouseEvent e) {
-    return new MouseEvent(_window, _trans, e.client.x.toDouble(), e.client.y.toDouble(),
+    return new MouseEvent(_window, _projection, e.client.x.toDouble(), e.client.y.toDouble(),
         new MouseButtonState(e.button, shiftKey: e.shiftKey, ctrlKey: e.ctrlKey, altKey: e.altKey));
   }
 

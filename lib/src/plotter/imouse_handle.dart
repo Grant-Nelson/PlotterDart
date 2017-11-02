@@ -32,7 +32,7 @@ class MouseEvent {
   final Bounds window;
 
   /// Transformer for converting from graphics view coordinate system to screen coordinate system.
-  final Transformer transformer;
+  final Transformer projection;
 
   /// X location of the mouse.
   final double x;
@@ -46,7 +46,7 @@ class MouseEvent {
   bool _redraw;
 
   /// Creates a new mouse event arguments.
-  MouseEvent(this.window, this.transformer, this.x, this.y, this.state) {
+  MouseEvent(this.window, this.projection, this.x, this.y, this.state) {
     _redraw = false;
   }
 
@@ -55,10 +55,10 @@ class MouseEvent {
   set redraw(bool draw) => _redraw = draw;
 
   /// Gets the graphic coordinate system mouse x location.
-  double get px => transformer.untransformX(x);
+  double get px => projection.untransformX(x);
 
   /// Gets the graphic coordinate system mouse y location.
-  double get py => transformer.untransformY(window.ymax - y);
+  double get py => projection.untransformY(window.ymax - y);
 }
 
 /// A mouse handler for managing user input.
