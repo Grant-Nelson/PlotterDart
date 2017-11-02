@@ -2,32 +2,36 @@ library plotter;
 
 import 'dart:math' as math;
 
-part 'base_coords_item.dart';
+part 'attributes/color_attr.dart';
+part 'attributes/directed_line_attr.dart';
+part 'attributes/fill_color_attr.dart';
+part 'attributes/point_size_attr.dart';
+part 'attributes/trans_attr.dart';
+
+part 'items/base_coords_item.dart';
+part 'items/circle_group.dart';
+part 'items/circle.dart';
+part 'items/data_bounds.dart';
+part 'items/ellipse_group.dart';
+part 'items/ellipses.dart';
+part 'items/grid.dart';
+part 'items/lines.dart';
+part 'items/line_strip.dart';
+part 'items/points.dart';
+part 'items/polygon.dart';
+part 'items/rectangle_group.dart';
+part 'items/rectangle.dart';
+
+part 'mouse/crosshairs.dart';
+part 'mouse/pan.dart';
+
 part 'bounds.dart';
-part 'circle_group.dart';
-part 'circle.dart';
 part 'color.dart';
-part 'color_attr.dart';
-part 'data_bounds.dart';
-part 'directed_line_attr.dart';
-part 'ellipse_group.dart';
-part 'ellipses.dart';
-part 'fill_color_attr.dart';
-part 'grid.dart';
 part 'group.dart';
 part 'iattribute.dart';
 part 'imouse_handle.dart';
 part 'irenderer.dart';
-part 'lines.dart';
-part 'line_strip.dart';
-part 'mouse_pan.dart';
 part 'plotter_item.dart';
-part 'points.dart';
-part 'point_size_attr.dart';
-part 'polygon.dart';
-part 'rectangle_group.dart';
-part 'rectangle.dart';
-part 'trans_attr.dart';
 part 'transformer.dart';
 
 /// minimum plotter zoom value.
@@ -52,7 +56,6 @@ const double _maxZoom = 1.0e+6;
 ///                  addPointSize(4.0);
 ///   plot.updateBounds();
 ///   plot.focusOnData();
-///   plot.show();
 class Plotter extends Group {
   /// The data bounds for the item's data.
   Bounds _bounds;
@@ -67,8 +70,9 @@ class Plotter extends Group {
   Plotter([String label = ""]) : super(label) {
     _bounds = new Bounds.empty();
     _viewTrans = new Transformer.identity();
-    _msHndls = new List<iMouseHandle>()..add(new MousePan(this, new MouseButtonState(0)));
     add([new Grid(), new DataBounds()]);
+    _msHndls = new List<iMouseHandle>()
+      ..add(new MousePan(this, new MouseButtonState(0)));
     addColor(0.0, 0.0, 0.0);
   }
 

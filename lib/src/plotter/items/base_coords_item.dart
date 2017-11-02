@@ -14,11 +14,18 @@ abstract class BasicCoordsItem extends PlotterItem {
     for (int i = 0; i < _coordCount; i++) _coords.add(new List<double>());
   }
 
+  // Clears all the items.
+  void clear() {
+    for (int i = 0; i < _coordCount; i++) _coords[i].clear();
+  }
+
   /// Adds values to the item.
   void add(List<double> val) {
     final int count = val.length;
     for (int i = 0; i < count; i += _coordCount) {
-      for (int j = 0; j < _coordCount; j++) _coords[j].add(val[i + j]);
+      for (int j = 0; j < _coordCount; j++) {
+        _coords[j].add(val[i + j]);
+      }
     }
   }
 
