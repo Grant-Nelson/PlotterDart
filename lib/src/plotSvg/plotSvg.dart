@@ -45,10 +45,16 @@ class PlotSvg {
   }
 
   /// The width of the div that is being plotted to.
-  double get _width => _svg.clientWidth.toDouble();
+  double get _width {
+    var box = _svg.getBoundingClientRect();
+    return (box.right - box.left).toDouble();
+  }
 
   /// The height of the div that is being plotted to.
-  double get _height => _svg.clientHeight.toDouble();
+  double get _height {
+    var box = _svg.getBoundingClientRect();
+    return (box.bottom - box.top).toDouble();
+  }
 
   /// Gets the transformer for the plot target div.
   /// This is the projection from the view coordinates to the window coordinates.
@@ -106,6 +112,7 @@ class PlotSvg {
 
   /// Called when the mouse wheel is moved.
   void _mouseWheelMoved(html.WheelEvent e) {
+    print(e);
     e.stopPropagation();
     e.preventDefault();
     MouseEvent me = _mouseLoc(e);

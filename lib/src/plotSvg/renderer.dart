@@ -105,9 +105,7 @@ class Renderer extends IRenderer {
   /// Clears the panel to white.
   void clear() {
     _svg.nodes.clear();
-    _svg.viewBox.baseVal
-      ..width = _window.width
-      ..height = _window.height;
+    _svg.attributes["viewBox"] = "0 0 ${_window.width} ${_window.height}";
     _svg.style.backgroundColor = _getColorString(_backClr);
     _sout.clear();
   }
