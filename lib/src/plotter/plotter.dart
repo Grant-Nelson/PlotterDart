@@ -71,8 +71,7 @@ class Plotter extends Group {
     _bounds = new Bounds.empty();
     _viewTrans = new Transformer.identity();
     add([new Grid(), new DataBounds()]);
-    _msHndls = new List<iMouseHandle>()
-      ..add(new MousePan(this, new MouseButtonState(0)));
+    _msHndls = new List<iMouseHandle>()..add(new MousePan(this, new MouseButtonState(0)));
     addColor(0.0, 0.0, 0.0);
   }
 
@@ -139,7 +138,8 @@ class Plotter extends Group {
     double prev = math.max(_viewTrans.xScalar, _viewTrans.yScalar);
     double scale = math.pow(10.0, math.log(prev) / math.LN10 - dw);
 
-    if (scale < _minZoom) scale = _minZoom;
+    if (scale < _minZoom)
+      scale = _minZoom;
     else if (scale > _maxZoom) scale = _maxZoom;
 
     double x = e.px;

@@ -112,7 +112,6 @@ class PlotSvg {
 
   /// Called when the mouse wheel is moved.
   void _mouseWheelMoved(html.WheelEvent e) {
-    print(e);
     e.stopPropagation();
     e.preventDefault();
     MouseEvent me = _mouseLoc(e);

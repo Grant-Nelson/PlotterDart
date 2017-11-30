@@ -16,7 +16,7 @@ class PointAdder implements plotter.iMouseHandle {
 
   List<double> transMouse(plotter.MouseEvent e) {
     plotter.Transformer trans = e.projection.mul(_plot.view);
-    return [trans.untransformX(e.x), trans.untransformY(e.window.ymax- e.y)];
+    return [trans.untransformX(e.x), trans.untransformY(e.window.ymax - e.y)];
   }
 
   void mouseDown(plotter.MouseEvent e) {

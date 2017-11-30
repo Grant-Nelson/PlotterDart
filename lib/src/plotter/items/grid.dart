@@ -104,8 +104,7 @@ class Grid extends PlotterItem {
     double minSpacing = 5.0;
     int maxPow = math.max(_getMaxPow(view.width), _getMaxPow(view.height));
     int minPow = math.min(
-      _getMaxPow(view.width * minSpacing / window.width),
-      _getMaxPow(view.height * minSpacing / window.height));
+        _getMaxPow(view.width * minSpacing / window.width), _getMaxPow(view.height * minSpacing / window.height));
 
     int diff = maxPow - minPow;
     if (diff <= 0) {
