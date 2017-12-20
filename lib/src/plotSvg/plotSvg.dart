@@ -19,6 +19,9 @@ class PlotSvg {
   /// The plotter to render.
   Plotter _plotter;
 
+  /// Indicates that a refresh is pending.
+  bool _pendingRender;
+
   /// Creates a plotter that outputs SVG.
   PlotSvg.fromElem(this._targetDiv, this._plotter) {
     _svg = new svg.SvgSvgElement();
@@ -29,19 +32,43 @@ class PlotSvg {
       ..height = "100%";
 
     _svg
-      ..onResize.listen((e) => _draw())
-      ..onMouseDown.listen((e) => _mouseDown(e))
-      ..onMouseMove.listen((e) => _mouseMove(e))
-      ..onMouseUp.listen((e) => _mouseUp(e))
-      ..onMouseWheel.listen((e) => _mouseWheelMoved(e));
+      ..onResize.listen(_resize)
+      ..onMouseDown.listen(_mouseDown)
+      ..onMouseMove.listen(_mouseMove)
+      ..onMouseUp.listen(_mouseUp)
+      ..onMouseWheel.listen( _mouseWheelMoved);
 
+    html.window.onResize.listen(_resize);
+
+    _pendingRender = false;
     _targetDiv.append(_svg);
-    _draw();
+    refresh();
   }
 
   /// Creates a plotter that outputs SVG.
   factory PlotSvg(String targetDivId, Plotter plot) {
     return new PlotSvg.fromElem(html.querySelector('#' + targetDivId), plot);
+  }
+
+  /// Refreshes the SVG drawing.
+  void refresh() {
+    if (!_pendingRender) {
+      _pendingRender = true;
+      html.window.requestAnimationFrame((num t) {
+        if (_pendingRender) {
+          _pendingRender = false;
+          _draw();
+        }
+      });
+    }
+  }
+
+  /// Draws to the target with SVG.
+  void _draw() {
+    Renderer r = new Renderer._(_svg, _window, _projection);
+    r.clear();
+    _plotter.render(r);
+    r.finalize();
   }
 
   /// The width of the div that is being plotted to.
@@ -69,12 +96,9 @@ class PlotSvg {
   /// Gets the window size for the plot.
   Bounds get _window => new Bounds(0.0, 0.0, _width, _height);
 
-  /// Draws to the target with SVG.
-  void _draw() {
-    Renderer r = new Renderer._(_svg, _window, _projection);
-    r.clear();
-    _plotter.render(r);
-    r.finalize();
+  /// Called when the svg is resized.
+  void _resize(html.Event _) {
+    refresh();
   }
 
   /// Creates a mouse event for a dart mouse event.
@@ -89,7 +113,7 @@ class PlotSvg {
     e.preventDefault();
     MouseEvent me = _mouseLoc(e);
     _plotter.onMouseDown(me);
-    if (me.redraw) _draw();
+    if (me.redraw) refresh();
   }
 
   /// Called when the mouse is moved with the button down.
@@ -98,7 +122,7 @@ class PlotSvg {
     e.preventDefault();
     MouseEvent me = _mouseLoc(e);
     _plotter.onMouseMove(me);
-    if (me.redraw) _draw();
+    if (me.redraw) refresh();
   }
 
   /// Called when the mouse button is released.
@@ -107,7 +131,7 @@ class PlotSvg {
     e.preventDefault();
     MouseEvent me = _mouseLoc(e);
     _plotter.onMouseUp(me);
-    if (me.redraw) _draw();
+    if (me.redraw) refresh();
   }
 
   /// Called when the mouse wheel is moved.
@@ -117,6 +141,6 @@ class PlotSvg {
     MouseEvent me = _mouseLoc(e);
     double dw = e.deltaY.toDouble() / 1000.0;
     _plotter.onMouseWheel(me, dw);
-    if (me.redraw) _draw();
+    if (me.redraw) refresh();
   }
 }
