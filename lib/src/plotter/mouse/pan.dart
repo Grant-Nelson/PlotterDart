@@ -1,9 +1,12 @@
 part of plotter;
 
 /// A mouse handler for translating the view port.
-class MousePan implements iMouseHandle {
+class MousePan implements IMouseHandle {
   /// The plotter this mouse handle is changing.
   Plotter _plot;
+
+  /// Indicates if mouse panning is enabled or not.
+  bool _enabled;
 
   /// The mouse button pressed.
   final MouseButtonState _state;
@@ -25,6 +28,7 @@ class MousePan implements iMouseHandle {
 
   /// Creates a new mouse pan handler.
   MousePan(this._plot, this._state) {
+    _enabled = true;
     _msx = 0.0;
     _msy = 0.0;
     _viewx = 0.0;
@@ -32,9 +36,13 @@ class MousePan implements iMouseHandle {
     _moveStarted = false;
   }
 
+  /// Indicates of the mouse panning is enabled or not.
+  bool get enabled => _enabled;
+  set enabled(bool value) => _enabled = value;
+
   /// handles mouse down.
   void mouseDown(MouseEvent e) {
-    if (e.state.equals(_state)) {
+    if (_enabled && e.state.equals(_state)) {
       _viewx = _plot.view.dx;
       _viewy = _plot.view.dy;
       _msx = e.x;

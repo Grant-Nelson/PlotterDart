@@ -64,25 +64,30 @@ class Plotter extends Group {
   Transformer _viewTrans;
 
   /// The set of mouse handles.
-  List<iMouseHandle> _msHndls;
+  List<IMouseHandle> _msHndls;
 
   /// Creates a new plotter.
   Plotter([String label = ""]) : super(label) {
     _bounds = new Bounds.empty();
     _viewTrans = new Transformer.identity();
     add([new Grid(), new DataBounds()]);
-    _msHndls = new List<iMouseHandle>()..add(new MousePan(this, new MouseButtonState(0)));
+    _msHndls = new List<IMouseHandle>()..add(new MousePan(this, new MouseButtonState(0)));
     addColor(0.0, 0.0, 0.0);
   }
 
   /// Focuses on the data.
   /// Note: May need to call updateBounds before this if the data has changed.
   void focusOnData() {
+    focusOnBounds(_bounds);
+  }
+
+  /// Focuses the view to the given bounds.
+  void focusOnBounds(Bounds bounds, [double scalar = 0.95]) {
     _viewTrans.reset();
-    if (!_bounds.isEmpty) {
-      double scale = 0.95 / math.max(_bounds.width, _bounds.height);
+    if (!bounds.isEmpty) {
+      double scale = scalar / math.max(bounds.width, bounds.height);
       _viewTrans.setScale(scale, scale);
-      _viewTrans.setOffset(-0.5 * (_bounds.xmin + _bounds.xmax) * scale, -0.5 * (_bounds.ymin + _bounds.ymax) * scale);
+      _viewTrans.setOffset(-0.5 * (bounds.xmin + bounds.xmax) * scale, -0.5 * (bounds.ymin + bounds.ymax) * scale);
     }
   }
 
@@ -102,7 +107,7 @@ class Plotter extends Group {
   }
 
   /// Gets the list of mouse handles,
-  List<iMouseHandle> get MouseHandles => _msHndls;
+  List<IMouseHandle> get MouseHandles => _msHndls;
 
   /// The transformation from window space to view space.
   Transformer get view => _viewTrans;
@@ -120,17 +125,17 @@ class Plotter extends Group {
 
   /// Handles mouse down events.
   void onMouseDown(MouseEvent e) {
-    for (iMouseHandle hndl in _msHndls) hndl.mouseDown(e);
+    for (IMouseHandle hndl in _msHndls) hndl.mouseDown(e);
   }
 
   /// Handles mouse move events.
   void onMouseMove(MouseEvent e) {
-    for (iMouseHandle hndl in _msHndls) hndl.mouseMove(e);
+    for (IMouseHandle hndl in _msHndls) hndl.mouseMove(e);
   }
 
   /// Handles mouse up events.
   void onMouseUp(MouseEvent e) {
-    for (iMouseHandle hndl in _msHndls) hndl.mouseUp(e);
+    for (IMouseHandle hndl in _msHndls) hndl.mouseUp(e);
   }
 
   /// Handles mouse wheel move events.

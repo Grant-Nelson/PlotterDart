@@ -1,6 +1,6 @@
 part of main;
 
-class PointAdder implements plotter.iMouseHandle {
+class PointAdder implements plotter.IMouseHandle {
   plotter.Plotter _plot;
   plotter.MouseButtonState _state;
   bool _mouseDown;

@@ -62,7 +62,7 @@ class MouseEvent {
 }
 
 /// A mouse handler for managing user input.
-abstract class iMouseHandle {
+abstract class IMouseHandle {
   /// handles mouse down.
   void mouseDown(MouseEvent e);
 

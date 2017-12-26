@@ -1,7 +1,7 @@
 part of plotter;
 
 /// Adds crosshairs at the mouse location.
-class MouseCrosshairs implements iMouseHandle {
+class MouseCrosshairs implements IMouseHandle {
   /// The plotter this mouse handle is changing.
   Plotter _plot;
 

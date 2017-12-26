@@ -36,7 +36,7 @@ class PlotSvg {
       ..onMouseDown.listen(_mouseDown)
       ..onMouseMove.listen(_mouseMove)
       ..onMouseUp.listen(_mouseUp)
-      ..onMouseWheel.listen( _mouseWheelMoved);
+      ..onMouseWheel.listen(_mouseWheelMoved);
 
     html.window.onResize.listen(_resize);
 
