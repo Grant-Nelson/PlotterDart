@@ -44,7 +44,7 @@ abstract class BasicCoordsItem extends PlotterItem {
   List<double> get(int index, int count) {
     List<double> val = new List<double>();
     for (int i = 0; i < count; i++) {
-      for (int j = 0; j < _coordCount; j++) val.add(_coords[j][i]);
+      for (int j = 0; j < _coordCount; j++) val.add(_coords[j][index + i]);
     }
     return val;
   }
