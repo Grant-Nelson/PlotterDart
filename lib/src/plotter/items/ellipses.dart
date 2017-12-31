@@ -12,7 +12,7 @@ class Ellipses extends BasicCoordsItem {
 
   /// Draws the group to the panel.
   void _onDraw(IRenderer r) {
-    r.drawEllips(_lefts, _tops, _widths, _heights);
+    r.drawEllipse(_lefts, _tops, _widths, _heights);
   }
 
   /// Gets the bounds for the item.

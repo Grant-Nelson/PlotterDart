@@ -36,6 +36,9 @@ abstract class IRenderer {
   bool get directedLines;
   set directedLines(bool directed);
 
+  /// Draws text to the viewport.
+  void drawText(double x, double y, double size, String text);
+
   /// Draws a point to the viewport.
   void drawPoint(double x, double y);
 
@@ -57,11 +60,11 @@ abstract class IRenderer {
   /// Draws a set of rectangles to the viewport.
   void drawRectSet(List<double> xCoords, List<double> yCoords, double width, double height);
 
-  /// Draws a set of ellips to the viewport.
-  void drawEllips(List<double> xCoords, List<double> yCoords, List<double> widths, List<double> heights);
+  /// Draws a set of ellipse to the viewport.
+  void drawEllipse(List<double> xCoords, List<double> yCoords, List<double> widths, List<double> heights);
 
-  /// Draws a set of ellips to the viewport.
-  void drawEllipsSet(List<double> xCoords, List<double> yCoords, double width, double height);
+  /// Draws a set of ellipse to the viewport.
+  void drawEllipseSet(List<double> xCoords, List<double> yCoords, double width, double height);
 
   /// Draws a set of circles to the viewport.
   void drawCircs(List<double> xCoords, List<double> yCoords, List<double> radius);

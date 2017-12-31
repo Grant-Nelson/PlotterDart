@@ -35,6 +35,17 @@ class Group extends PlotterItem {
     for (PlotterItem item in items) _items.add(item);
   }
 
+  /// Adds a text plotter item with the given data.
+  Text addText(double x, double y, double size, String text) {
+    Text item = new Text()
+      ..x = x
+      ..y = y
+      ..size = size
+      ..text = text;
+    add([item]);
+    return item;
+  }
+
   /// Adds a points plotter item with the given data.
   Points addPoints(List<double> val) {
     Points item = new Points()..add(val);

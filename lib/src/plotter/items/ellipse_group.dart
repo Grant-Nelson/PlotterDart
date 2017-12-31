@@ -25,7 +25,7 @@ class EllipseGroup extends BasicCoordsItem {
 
   /// Draws the group to the panel.
   void _onDraw(IRenderer r) {
-    r.drawEllipsSet(_lefts, _tops, _width, _height);
+    r.drawEllipseSet(_lefts, _tops, _width, _height);
   }
 
   /// Gets the bounds for the item.

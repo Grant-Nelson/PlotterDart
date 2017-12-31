@@ -110,6 +110,12 @@ class Renderer extends IRenderer {
     _sout.clear();
   }
 
+  /// Draws text to the viewport.
+  void drawText(double x, double y, double size, String text) {
+    _sout.write("<text x=\"$x\" y=\"$y\" style=\"font-family: Verdana; font-size: ${size}px;\" ");
+    _sout.writeln("$_lineClrStr$_fillClrStr>${text}</text>");
+  }
+
   /// Draws a point to the viewport.
   void drawPoint(double x, double y) {
     x = _transX(x);
@@ -202,7 +208,7 @@ class Renderer extends IRenderer {
   }
 
   /// Draws an ellipse to the viewport.
-  void drawEllip(double x1, double y1, double x2, double y2) {
+  void drawEllipe(double x1, double y1, double x2, double y2) {
     x1 = _transX(x1);
     y1 = _transY(y1);
     x2 = _transX(x2);
@@ -225,24 +231,24 @@ class Renderer extends IRenderer {
   }
 
   /// Draws a set of ellipses to the viewport.
-  void drawEllips(List<double> xCoords, List<double> yCoords, List<double> widths, List<double> heights) {
+  void drawEllipse(List<double> xCoords, List<double> yCoords, List<double> widths, List<double> heights) {
     assert(xCoords.length == yCoords.length);
     assert(xCoords.length == widths.length);
     assert(xCoords.length == heights.length);
     for (int i = xCoords.length - 1; i >= 0; --i) {
       double x = xCoords[i];
       double y = yCoords[i];
-      drawEllip(x, y, x + widths[i], y + heights[i]);
+      drawEllipe(x, y, x + widths[i], y + heights[i]);
     }
   }
 
   /// Draws a set of ellipses to the viewport.
-  void drawEllipsSet(List<double> xCoords, List<double> yCoords, double width, double height) {
+  void drawEllipseSet(List<double> xCoords, List<double> yCoords, double width, double height) {
     assert(xCoords.length == yCoords.length);
     for (int i = xCoords.length - 1; i >= 0; --i) {
       double x = xCoords[i];
       double y = yCoords[i];
-      drawEllip(x, y, x + width, y + height);
+      drawEllipe(x, y, x + width, y + height);
     }
   }
 

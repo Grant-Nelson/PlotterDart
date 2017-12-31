@@ -21,7 +21,9 @@ part 'items/points.dart';
 part 'items/polygon.dart';
 part 'items/rectangle_group.dart';
 part 'items/rectangle.dart';
+part 'items/text.dart';
 
+part 'mouse/coords.dart';
 part 'mouse/crosshairs.dart';
 part 'mouse/pan.dart';
 
