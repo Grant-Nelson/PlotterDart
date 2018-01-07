@@ -300,6 +300,18 @@ class Renderer extends IRenderer {
         _sout.write(" $x,$y");
       }
       _sout.writeln("\" $_fillClrStr$_lineClrStr/>");
+
+      if (_lineDir) {
+        double x1 = _transX(xCoords[count - 1]);
+        double y1 = _transY(yCoords[count - 1]);
+        for (int i = 0; i < count; ++i) {
+          double x2 = _transX(xCoords[i]);
+          double y2 = _transY(yCoords[i]);
+          _writeLine(x1, y1, x2, y2);
+          x1 = x2;
+          x1 = y2;
+        }
+      }
     }
 
     if (_pointSize > 1.0) {
@@ -321,6 +333,18 @@ class Renderer extends IRenderer {
         _sout.write(" $x,$y");
       }
       _sout.writeln("\" fill=\"none\" $_lineClrStr/>");
+
+      if (_lineDir) {
+        double x1 = _transX(xCoords[0]);
+        double y1 = _transY(yCoords[0]);
+        for (int i = 1; i < count; ++i) {
+          double x2 = _transX(xCoords[i]);
+          double y2 = _transY(yCoords[i]);
+          _writeLine(x1, y1, x2, y2);
+          x1 = x2;
+          x1 = y2;
+        }
+      }
     }
 
     if (_pointSize > 1.0) {
