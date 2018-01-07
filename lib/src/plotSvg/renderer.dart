@@ -138,8 +138,18 @@ class Renderer extends IRenderer {
     double ty1 = _transY(y1);
     double tx2 = _transX(x2);
     double ty2 = _transY(y2);
-    _writeLine(tx1, ty1, tx2, ty2);
+    _drawTransLine(x1, y1, x2, y2, tx1, ty1, tx2, ty2);
 
+    if (_pointSize > 1.0) {
+      drawPoint(x1, y1);
+      drawPoint(x2, y2);
+    }
+  }
+
+
+  /// Draws a line to the viewport with pre-translated coordinates.
+  void _drawTransLine(double x1, double y1, double x2, double y2, double tx1, double ty1, double tx2, double ty2) {
+    _writeLine(tx1, ty1, tx2, ty2);
     if (_lineDir) {
       double dx = x2 - x1;
       double dy = y2 - y1;
@@ -156,11 +166,6 @@ class Renderer extends IRenderer {
         _writeLine(tx2, ty2, tx3 + dx3, ty3 + dy3);
         _writeLine(tx2, ty2, tx3 - dx3, ty3 - dy3);
       }
-    }
-
-    if (_pointSize > 1.0) {
-      drawPoint(x1, y1);
-      drawPoint(x2, y2);
     }
   }
 
@@ -302,14 +307,20 @@ class Renderer extends IRenderer {
       _sout.writeln("\" $_fillClrStr$_lineClrStr/>");
 
       if (_lineDir) {
-        double x1 = _transX(xCoords[count - 1]);
-        double y1 = _transY(yCoords[count - 1]);
+        double x1 = xCoords[count - 1];
+        double y1 = yCoords[count - 1];
+        double tx1 = _transX(x1);
+        double ty1 = _transY(y1);
         for (int i = 0; i < count; ++i) {
-          double x2 = _transX(xCoords[i]);
-          double y2 = _transY(yCoords[i]);
-          _writeLine(x1, y1, x2, y2);
+          double x2 = xCoords[i];
+          double y2 = yCoords[i];
+          double tx2 = _transX(x2);
+          double ty2 = _transY(y2);
+          _drawTransLine(x1, y1, x2, y2, tx1, ty1, tx2, ty2);
           x1 = x2;
-          x1 = y2;
+          y1 = y2;
+          tx1 = tx2;
+          ty1 = ty2;
         }
       }
     }
@@ -335,14 +346,20 @@ class Renderer extends IRenderer {
       _sout.writeln("\" fill=\"none\" $_lineClrStr/>");
 
       if (_lineDir) {
-        double x1 = _transX(xCoords[0]);
-        double y1 = _transY(yCoords[0]);
+        double x1 = xCoords[0];
+        double y1 = yCoords[0];
+        double tx1 = _transX(x1);
+        double ty1 = _transY(y1);
         for (int i = 1; i < count; ++i) {
-          double x2 = _transX(xCoords[i]);
-          double y2 = _transY(yCoords[i]);
-          _writeLine(x1, y1, x2, y2);
+          double x2 = xCoords[i];
+          double y2 = yCoords[i];
+          double tx2 = _transX(x2);
+          double ty2 = _transY(y2);
+          _drawTransLine(x1, y1, x2, y2, tx1, ty1, tx2, ty2);
           x1 = x2;
-          x1 = y2;
+          y1 = y2;
+          tx1 = tx2;
+          ty1 = ty2;
         }
       }
     }
