@@ -143,7 +143,7 @@ class Plotter extends Group {
   /// Handles mouse wheel move events.
   void onMouseWheel(MouseEvent e, double dw) {
     double prev = math.max(_viewTrans.xScalar, _viewTrans.yScalar);
-    double scale = math.pow(10.0, math.log(prev) / math.LN10 - dw);
+    double scale = math.pow(10.0, math.log(prev) / math.ln10 - dw);
 
     if (scale < _minZoom)
       scale = _minZoom;

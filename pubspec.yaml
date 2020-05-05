@@ -1,7 +1,13 @@
 name: 'plotterDart'
-version: 0.0.1
-description: A dart plotting two.
+version: 0.1.0
+description: A dart plotting tool.
 environment:
-  sdk: '>=1.0.0 <2.0.0'
+  sdk: '>=2.0.0'
+
 dependencies:
-  browser: any
+  build_runner: ^1.0.0
+  build_test: ^0.10.2
+  build_web_compilers: ^2.4.0
+
+dev_dependencies:
+  webdev: ^1.0.0

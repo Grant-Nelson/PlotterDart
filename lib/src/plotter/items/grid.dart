@@ -21,7 +21,7 @@ class Grid extends PlotterItem {
 
   /// Gets the smallest power of 10 which is greater than the given value.
   int _getMaxPow(double value) {
-    return (math.log(value) / math.LN10).ceil();
+    return (math.log(value) / math.ln10).ceil();
   }
 
   /// Gets the number above the given value in multiples of the given power value.
