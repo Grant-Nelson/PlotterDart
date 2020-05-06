@@ -54,8 +54,8 @@ const double _maxZoom = 1.0e+6;
 ///   plot.addPoints([12.1, 10.1,   10.9, 10.1,
 ///                   10.9, 11.1,    6.9, 10.9,
 ///                   10.9, 10.9,   10.1, 13.9,
-///                   10.1,  4.9,   10.1, 10.1]).
-///                  addPointSize(4.0);
+///                   10.1,  4.9,   10.1, 10.1])
+///                 ..addPointSize(4.0);
 ///   plot.updateBounds();
 ///   plot.focusOnData();
 class Plotter extends Group {
@@ -79,9 +79,7 @@ class Plotter extends Group {
 
   /// Focuses on the data.
   /// Note: May need to call updateBounds before this if the data has changed.
-  void focusOnData() {
-    focusOnBounds(_bounds);
-  }
+  void focusOnData() => focusOnBounds(_bounds);
 
   /// Focuses the view to the given bounds.
   void focusOnBounds(Bounds bounds, [double scalar = 0.95]) {
@@ -145,8 +143,7 @@ class Plotter extends Group {
     double prev = math.max(_viewTrans.xScalar, _viewTrans.yScalar);
     double scale = math.pow(10.0, math.log(prev) / math.ln10 - dw);
 
-    if (scale < _minZoom)
-      scale = _minZoom;
+    if (scale < _minZoom)      scale = _minZoom;
     else if (scale > _maxZoom) scale = _maxZoom;
 
     double x = e.px;

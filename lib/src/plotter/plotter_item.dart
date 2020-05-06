@@ -18,14 +18,14 @@ abstract class PlotterItem {
 
   /// Adds a color attribute to this item.
   void addColor(double red, double green, double blue, [double alpha = 1.0]) =>
-      addAttr(new ColorAttr.rgb(red, green, blue, alpha));
+    addAttr(new ColorAttr.rgb(red, green, blue, alpha));
 
   /// Adds a point size attribute to this item.
   void addPointSize(double size) => addAttr(new PointSizeAttr(size));
 
   /// Adds a filled attribute to this item.
   void addFillColor(double red, double green, double blue, [double alpha = 1.0]) =>
-      addAttr(new FillColorAttr.rgb(red, green, blue, alpha));
+    addAttr(new FillColorAttr.rgb(red, green, blue, alpha));
 
   /// Adds a filled attribute indicating no fill color to this item.
   void addNoFillColor() => addAttr(new FillColorAttr(null));

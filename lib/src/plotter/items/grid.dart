@@ -20,19 +20,16 @@ class Grid extends PlotterItem {
   }
 
   /// Gets the smallest power of 10 which is greater than the given value.
-  int _getMaxPow(double value) {
-    return (math.log(value) / math.ln10).ceil();
-  }
+  int _getMaxPow(double value) =>
+    (math.log(value) / math.ln10).ceil();
 
   /// Gets the number above the given value in multiples of the given power value.
-  double _getUpper(double value, double pow) {
-    return (value / pow).ceilToDouble() * pow;
-  }
+  double _getUpper(double value, double pow) =>
+    (value / pow).ceilToDouble() * pow;
 
   /// Gets the number below the given value in multiples of the given power value.
-  double _getLower(double value, double pow) {
-    return (value / pow).floorToDouble() * pow;
-  }
+  double _getLower(double value, double pow) =>
+    (value / pow).floorToDouble() * pow;
 
   /// Adds a horizontal line at the given offset to the given group.
   void _addHorz(List<double> group, double offset, Bounds window, Bounds view) {

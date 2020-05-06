@@ -46,9 +46,8 @@ class PlotSvg {
   }
 
   /// Creates a plotter that outputs SVG.
-  factory PlotSvg(String targetDivId, Plotter plot) {
-    return new PlotSvg.fromElem(html.querySelector('#' + targetDivId), plot);
-  }
+  factory PlotSvg(String targetDivId, Plotter plot) =>
+    new PlotSvg.fromElem(html.querySelector('#' + targetDivId), plot);
 
   /// Refreshes the SVG drawing.
   void refresh() {
@@ -102,10 +101,9 @@ class PlotSvg {
   }
 
   /// Creates a mouse event for a dart mouse event.
-  MouseEvent _mouseLoc(html.MouseEvent e) {
-    return new MouseEvent(_window, _projection, e.offset.x.toDouble(), e.offset.y.toDouble(),
-        new MouseButtonState(e.button, shiftKey: e.shiftKey, ctrlKey: e.ctrlKey, altKey: e.altKey));
-  }
+  MouseEvent _mouseLoc(html.MouseEvent e) =>
+    new MouseEvent(_window, _projection, e.client.x.toDouble(), e.client.y.toDouble(),
+      new MouseButtonState(e.button, shiftKey: e.shiftKey, ctrlKey: e.ctrlKey, altKey: e.altKey));
 
   /// Called when the mouse button is pressed on the panel.
   void _mouseDown(html.MouseEvent e) {

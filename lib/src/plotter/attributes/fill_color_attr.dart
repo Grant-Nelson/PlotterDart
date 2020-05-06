@@ -14,9 +14,8 @@ class FillColorAttr extends IAttribute {
   }
 
   /// Creates a fill color attribute.
-  factory FillColorAttr.rgb(double red, double green, double blue, [double alpha = 1.0]) {
-    return new FillColorAttr(new Color(red, green, blue, alpha));
-  }
+  factory FillColorAttr.rgb(double red, double green, double blue, [double alpha = 1.0]) =>
+    new FillColorAttr(new Color(red, green, blue, alpha));
 
   /// The color to apply for this attribute.
   Color get color => _color;

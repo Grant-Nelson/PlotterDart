@@ -51,7 +51,6 @@ class Color {
   set alpha(double alpha) => _alpha = _clamp(alpha);
 
   /// Clamps a value to between 0 and 1 inclusively.
-  double _clamp(double val) {
-    return (val > 1.0) ? 1.0 : ((val < 0.0) ? 0.0 : val);
-  }
+  double _clamp(double val) =>
+    (val > 1.0) ? 1.0 : ((val < 0.0) ? 0.0 : val);
 }

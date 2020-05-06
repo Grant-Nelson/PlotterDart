@@ -15,9 +15,8 @@ class ColorAttr extends IAttribute {
   }
 
   /// Creates a line color attribute.
-  factory ColorAttr.rgb(double red, double green, double blue, [double alpha = 1.0]) {
-    return new ColorAttr(new Color(red, green, blue, alpha));
-  }
+  factory ColorAttr.rgb(double red, double green, double blue, [double alpha = 1.0]) =>
+    new ColorAttr(new Color(red, green, blue, alpha));
 
   /// The color to apply for this attribute.
   Color get color => _color;

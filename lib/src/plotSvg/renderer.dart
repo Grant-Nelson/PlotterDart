@@ -146,7 +146,6 @@ class Renderer extends IRenderer {
     }
   }
 
-
   /// Draws a line to the viewport with pre-translated coordinates.
   void _drawTransLine(double x1, double y1, double x2, double y2, double tx1, double ty1, double tx2, double ty2) {
     _writeLine(tx1, ty1, tx2, ty2);

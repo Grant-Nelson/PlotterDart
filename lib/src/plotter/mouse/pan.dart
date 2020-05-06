@@ -52,14 +52,12 @@ class MousePan implements IMouseHandle {
   }
 
   /// Gets the change in the view x location.
-  double _viewDX(MouseEvent e) {
-    return _viewx + (e.x - _msx) / e.projection.xScalar;
-  }
+  double _viewDX(MouseEvent e) =>
+    _viewx + (e.x - _msx) / e.projection.xScalar;
 
   /// Gets the change in the view y location.
-  double _viewDY(MouseEvent e) {
-    return _viewy - (e.y - _msy) / e.projection.yScalar;
-  }
+  double _viewDY(MouseEvent e) =>
+    _viewy - (e.y - _msy) / e.projection.yScalar;
 
   /// handles mouse moved.
   void mouseMove(MouseEvent e) {
