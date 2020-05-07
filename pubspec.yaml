@@ -1,5 +1,5 @@
 name: 'plotterDart'
-version: 0.1.0
+version: 0.1.1
 description: A dart plotting tool.
 environment:
   sdk: '>=2.0.0'

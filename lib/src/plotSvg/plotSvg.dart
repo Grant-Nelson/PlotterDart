@@ -101,9 +101,14 @@ class PlotSvg {
   }
 
   /// Creates a mouse event for a dart mouse event.
-  MouseEvent _mouseLoc(html.MouseEvent e) =>
-    new MouseEvent(_window, _projection, e.client.x.toDouble(), e.client.y.toDouble(),
+  MouseEvent _mouseLoc(html.MouseEvent e) {
+    var pt = _svg.createSvgPoint();
+    pt.x = e.client.x;
+    pt.y = e.client.y;
+    var local = pt.matrixTransform(_svg.getScreenCtm().inverse());
+    return new MouseEvent(_window, _projection, local.x, local.y,
       new MouseButtonState(e.button, shiftKey: e.shiftKey, ctrlKey: e.ctrlKey, altKey: e.altKey));
+  }
 
   /// Called when the mouse button is pressed on the panel.
   void _mouseDown(html.MouseEvent e) {
