@@ -5,6 +5,9 @@ class Renderer extends IRenderer {
   /// SVG validator for adding HTML.
   html.NodeValidatorBuilder _svgValidator;
 
+  /// SVG tree sanitizer for adding HTML.
+  html.NodeTreeSanitizer _treeSanitizer;
+
   /// The element to add graphics to.
   svg.SvgSvgElement _svg;
 
@@ -45,110 +48,115 @@ class Renderer extends IRenderer {
   bool _lineDir;
 
   /// Creates a new renderer.
-  Renderer._(this._svg, this._window, this._trans) {
-    _svgValidator = new html.NodeValidatorBuilder()..allowSvg();
-    _sout = new StringBuffer();
-    _dataBounds = new Bounds.empty();
-    _pointSize = 0.0;
-    _backClr = new Color(1.0, 1.0, 1.0);
-    color = new Color(0.0, 0.0, 0.0);
-    fillColor = null;
-    _lineDir = false;
+  Renderer._(this._svg, this._window, this._trans, [bool validateSVG = false]) {
+    if (validateSVG) {
+      this._svgValidator = new html.NodeValidatorBuilder()..allowSvg();
+      this._treeSanitizer = null;
+    } else {
+      this._svgValidator = null;
+      this._treeSanitizer = html.NodeTreeSanitizer.trusted;
+    }
+
+    this._sout = new StringBuffer();
+    this._dataBounds = new Bounds.empty();
+    this._pointSize = 0.0;
+    this._backClr = new Color(1.0, 1.0, 1.0);
+    this.color = new Color(0.0, 0.0, 0.0);
+    this.fillColor = null;
+    this._lineDir = false;
   }
 
   /// The data bounds.
-  Bounds get dataBounds => _dataBounds;
-  set dataBounds(Bounds dataBounds) => _dataBounds = dataBounds;
+  Bounds get dataBounds => this._dataBounds;
+  set dataBounds(Bounds dataBounds) => this._dataBounds = dataBounds;
 
   /// Gets the bounds of the panel being drawn on.
-  Bounds get window => _window;
+  Bounds get window => this._window;
 
   /// Gets the viewport into the window with the given transformation.
-  Bounds get viewport => _trans.transform(_window);
+  Bounds get viewport => this._trans.transform(this._window);
 
   /// The transformer for the current data.
-  Transformer get transform => _trans;
-  set transform(Transformer trans) => _trans = trans;
+  Transformer get transform => this._trans;
+  set transform(Transformer trans) => this._trans = trans;
 
   /// The point size to draw points with.
-  double get pointSize => _pointSize;
-  set pointSize(double size) => _pointSize = size;
+  double get pointSize => this._pointSize;
+  set pointSize(double size) => this._pointSize = size;
 
   /// The background color to clear to.
-  Color get backgroundColor => _backClr;
-  void set backgroundColor(Color color) => _backClr = color;
+  Color get backgroundColor => this._backClr;
+  void set backgroundColor(Color color) => this._backClr = color;
 
   /// The color to draw lines with.
-  Color get color => _lineClr;
+  Color get color => this._lineClr;
   void set color(Color color) {
-    _lineClr = color;
-    String drawClr = _getColorString(color);
-    _lineClrStr = "stroke=\"$drawClr\" stroke-opacity=\"${color.alpha}\" ";
-    _pointClrStr = "fill=\"$drawClr\" fill-opacity=\"${color.alpha}\" ";
+    this._lineClr = color;
+    String drawClr = this._getColorString(color);
+    this._lineClrStr = "stroke=\"$drawClr\" stroke-opacity=\"${color.alpha}\" ";
+    this._pointClrStr = "fill=\"$drawClr\" fill-opacity=\"${color.alpha}\" ";
   }
 
   /// The color to fill shapes with.
-  Color get fillColor => _fillClr;
+  Color get fillColor => this._fillClr;
   void set fillColor(Color color) {
-    _fillClr = color;
+    this._fillClr = color;
     if (color != null) {
-      String fillClr = _getColorString(color);
-      _fillClrStr = "fill=\"$fillClr\" fill-opacity=\"${color.alpha}\" ";
-    } else
-      _fillClrStr = "fill=\"none\" ";
+      String fillClr = this._getColorString(color);
+      this._fillClrStr = "fill=\"$fillClr\" fill-opacity=\"${color.alpha}\" ";
+    } else this._fillClrStr = "fill=\"none\" ";
   }
 
   /// Indicates if the lines should be drawn directed (with arrows), or not.
-  bool get directedLines => _lineDir;
-  set directedLines(bool directed) => _lineDir = directed;
+  bool get directedLines => this._lineDir;
+  set directedLines(bool directed) => this._lineDir = directed;
 
   /// Clears the panel to white.
   void clear() {
-    _svg.nodes.clear();
-    _svg.attributes["viewBox"] = "0 0 ${_window.width} ${_window.height}";
-    _svg.style.backgroundColor = _getColorString(_backClr);
-    _sout.clear();
+    this._svg.nodes.clear();
+    this._svg.attributes["viewBox"] = "0 0 ${this._window.width} ${this._window.height}";
+    this._svg.style.backgroundColor = this._getColorString(this._backClr);
+    this._sout.clear();
   }
 
   /// Draws text to the viewport.
   void drawText(double x, double y, double size, String text) {
-    _sout.write("<text x=\"$x\" y=\"$y\" style=\"font-family: Verdana; font-size: ${size}px;\" ");
-    _sout.writeln("$_lineClrStr$_fillClrStr>${text}</text>");
+    this._sout.write("<text x=\"$x\" y=\"$y\" style=\"font-family: Verdana; font-size: ${size}px;\" ");
+    this._sout.writeln("${this._lineClrStr}${this._fillClrStr}>${text}</text>");
   }
 
   /// Draws a point to the viewport.
   void drawPoint(double x, double y) {
-    x = _transX(x);
-    y = _transY(y);
-    double r = (_pointSize <= 1.0) ? 1.0 : _pointSize;
-    _writePoint(x, y, r);
+    x = this._transX(x);
+    y = this._transY(y);
+    double r = (this._pointSize <= 1.0) ? 1.0 : this._pointSize;
+    this._writePoint(x, y, r);
   }
 
   /// Draws a set of points to the viewport.
   void drawPoints(List<double> xCoords, List<double> yCoords) {
     assert(xCoords.length == yCoords.length);
-    for (int i = xCoords.length - 1; i >= 0; --i) {
-      drawPoint(xCoords[i], yCoords[i]);
-    }
+    for (int i = xCoords.length - 1; i >= 0; --i)
+      this.drawPoint(xCoords[i], yCoords[i]);
   }
 
   /// Draws a line to the viewport.
   void drawLine(double x1, double y1, double x2, double y2) {
-    double tx1 = _transX(x1);
-    double ty1 = _transY(y1);
-    double tx2 = _transX(x2);
-    double ty2 = _transY(y2);
-    _drawTransLine(x1, y1, x2, y2, tx1, ty1, tx2, ty2);
+    double tx1 = this._transX(x1);
+    double ty1 = this._transY(y1);
+    double tx2 = this._transX(x2);
+    double ty2 = this._transY(y2);
+    this._drawTransLine(x1, y1, x2, y2, tx1, ty1, tx2, ty2);
 
     if (_pointSize > 1.0) {
-      drawPoint(x1, y1);
-      drawPoint(x2, y2);
+      this.drawPoint(x1, y1);
+      this.drawPoint(x2, y2);
     }
   }
 
   /// Draws a line to the viewport with pre-translated coordinates.
   void _drawTransLine(double x1, double y1, double x2, double y2, double tx1, double ty1, double tx2, double ty2) {
-    _writeLine(tx1, ty1, tx2, ty2);
+    this._writeLine(tx1, ty1, tx2, ty2);
     if (_lineDir) {
       double dx = x2 - x1;
       double dy = y2 - y1;
@@ -162,8 +170,8 @@ class Renderer extends IRenderer {
         double dx3 = dy * height;
         double ty3 = ty2 + dy * width;
         double dy3 = dx * height;
-        _writeLine(tx2, ty2, tx3 + dx3, ty3 + dy3);
-        _writeLine(tx2, ty2, tx3 - dx3, ty3 - dy3);
+        this._writeLine(tx2, ty2, tx3 + dx3, ty3 + dy3);
+        this._writeLine(tx2, ty2, tx3 - dx3, ty3 - dy3);
       }
     }
   }
@@ -173,20 +181,19 @@ class Renderer extends IRenderer {
     assert(x1Coords.length == y1Coords.length);
     assert(x1Coords.length == x2Coords.length);
     assert(x1Coords.length == y2Coords.length);
-    for (int i = x1Coords.length - 1; i >= 0; --i) {
-      drawLine(x1Coords[i], y1Coords[i], x2Coords[i], y2Coords[i]);
-    }
+    for (int i = x1Coords.length - 1; i >= 0; --i)
+      this.drawLine(x1Coords[i], y1Coords[i], x2Coords[i], y2Coords[i]);
   }
 
   /// Draws a rectangle to the viewport.
   void drawRect(double x1, double y1, double x2, double y2) {
-    x1 = _transX(x1);
-    y1 = _transY(y1);
-    x2 = _transX(x2);
-    y2 = _transY(y2);
-    double width = x2 - x1;
+    x1 = this._transX(x1);
+    y1 = this._transY(y1);
+    x2 = this._transX(x2);
+    y2 = this._transY(y2);
+    double width  = x2 - x1;
     double height = y1 - y2;
-    _writeRect(x1, y2, width, height);
+    this._writeRect(x1, y2, width, height);
   }
 
   /// Draws a set of rectangles to the viewport.
@@ -197,7 +204,7 @@ class Renderer extends IRenderer {
     for (int i = xCoords.length - 1; i >= 0; --i) {
       double x = xCoords[i];
       double y = yCoords[i];
-      drawRect(x, y, x + widths[i], y + heights[i]);
+      this.drawRect(x, y, x + widths[i], y + heights[i]);
     }
   }
 
@@ -207,16 +214,16 @@ class Renderer extends IRenderer {
     for (int i = xCoords.length - 1; i >= 0; --i) {
       double x = xCoords[i];
       double y = yCoords[i];
-      drawRect(x, y, x + width, y + height);
+      this.drawRect(x, y, x + width, y + height);
     }
   }
 
   /// Draws an ellipse to the viewport.
   void drawEllipe(double x1, double y1, double x2, double y2) {
-    x1 = _transX(x1);
-    y1 = _transY(y1);
-    x2 = _transX(x2);
-    y2 = _transY(y2);
+    x1 = this._transX(x1);
+    y1 = this._transY(y1);
+    x2 = this._transX(x2);
+    y2 = this._transY(y2);
     if (x1 > x2) {
       double temp = x1;
       x1 = x2;
@@ -231,7 +238,7 @@ class Renderer extends IRenderer {
     double ry = (y2 - y1) * 0.5;
     double cx = x1 + rx;
     double cy = y1 + ry;
-    _writeEllipse(cx, cy, rx, ry);
+    this._writeEllipse(cx, cy, rx, ry);
   }
 
   /// Draws a set of ellipses to the viewport.
@@ -242,7 +249,7 @@ class Renderer extends IRenderer {
     for (int i = xCoords.length - 1; i >= 0; --i) {
       double x = xCoords[i];
       double y = yCoords[i];
-      drawEllipe(x, y, x + widths[i], y + heights[i]);
+      this.drawEllipe(x, y, x + widths[i], y + heights[i]);
     }
   }
 
@@ -252,7 +259,7 @@ class Renderer extends IRenderer {
     for (int i = xCoords.length - 1; i >= 0; --i) {
       double x = xCoords[i];
       double y = yCoords[i];
-      drawEllipe(x, y, x + width, y + height);
+      this.drawEllipe(x, y, x + width, y + height);
     }
   }
 
@@ -264,13 +271,13 @@ class Renderer extends IRenderer {
       double r = radius[i];
       double cx = xCoords[i];
       double cy = yCoords[i];
-      double x2 = _transX(cx + r);
-      double y2 = _transY(cy + r);
-      cx = _transX(cx);
-      cy = _transY(cy);
+      double x2 = this._transX(cx + r);
+      double y2 = this._transY(cy + r);
+      cx = this._transX(cx);
+      cy = this._transY(cy);
       double rx = x2 - cx;
       double ry = y2 - cy;
-      _writeEllipse(cx, cy, rx, ry);
+      this._writeEllipse(cx, cy, rx, ry);
     }
   }
 
@@ -280,13 +287,13 @@ class Renderer extends IRenderer {
     for (int i = xCoords.length - 1; i >= 0; --i) {
       double cx = xCoords[i];
       double cy = yCoords[i];
-      double x2 = _transX(cx + radius);
-      double y2 = _transY(cy + radius);
-      cx = _transX(cx);
-      cy = _transY(cy);
+      double x2 = this._transX(cx + radius);
+      double y2 = this._transY(cy + radius);
+      cx = this._transX(cx);
+      cy = this._transY(cy);
       double rx = x2 - cx;
       double ry = y2 - cy;
-      _writeEllipse(cx, cy, rx, ry);
+      this._writeEllipse(cx, cy, rx, ry);
     }
   }
 
@@ -295,27 +302,27 @@ class Renderer extends IRenderer {
     assert(xCoords.length == yCoords.length);
     int count = xCoords.length;
     if (count >= 3) {
-      double x = _transX(xCoords[0]);
-      double y = _transY(yCoords[0]);
-      _sout.write("<polygon points=\"$x,$y");
+      double x = this._transX(xCoords[0]);
+      double y = this._transY(yCoords[0]);
+      this._sout.write("<polygon points=\"$x,$y");
       for (int i = 1; i < count; ++i) {
-        x = _transX(xCoords[i]);
-        y = _transY(yCoords[i]);
-        _sout.write(" $x,$y");
+        x = this._transX(xCoords[i]);
+        y = this._transY(yCoords[i]);
+        this._sout.write(" $x,$y");
       }
-      _sout.writeln("\" $_fillClrStr$_lineClrStr/>");
+      this._sout.writeln("\" $_fillClrStr$_lineClrStr/>");
 
-      if (_lineDir) {
+      if (this._lineDir) {
         double x1 = xCoords[count - 1];
         double y1 = yCoords[count - 1];
-        double tx1 = _transX(x1);
-        double ty1 = _transY(y1);
+        double tx1 = this._transX(x1);
+        double ty1 = this._transY(y1);
         for (int i = 0; i < count; ++i) {
           double x2 = xCoords[i];
           double y2 = yCoords[i];
-          double tx2 = _transX(x2);
-          double ty2 = _transY(y2);
-          _drawTransLine(x1, y1, x2, y2, tx1, ty1, tx2, ty2);
+          double tx2 = this._transX(x2);
+          double ty2 = this._transY(y2);
+          this._drawTransLine(x1, y1, x2, y2, tx1, ty1, tx2, ty2);
           x1 = x2;
           y1 = y2;
           tx1 = tx2;
@@ -324,9 +331,8 @@ class Renderer extends IRenderer {
       }
     }
 
-    if (_pointSize > 1.0) {
-      drawPoints(xCoords, yCoords);
-    }
+    if (this._pointSize > 1.0)
+      this.drawPoints(xCoords, yCoords);
   }
 
   /// Draws a line strip to the viewport.
@@ -334,27 +340,27 @@ class Renderer extends IRenderer {
     assert(xCoords.length == yCoords.length);
     int count = xCoords.length;
     if (count >= 2) {
-      double x = _transX(xCoords[0]);
-      double y = _transY(yCoords[0]);
-      _sout.write("<polyline points=\"$x,$y");
+      double x = this._transX(xCoords[0]);
+      double y = this._transY(yCoords[0]);
+      this._sout.write("<polyline points=\"$x,$y");
       for (int i = 1; i < count; ++i) {
-        x = _transX(xCoords[i]);
-        y = _transY(yCoords[i]);
-        _sout.write(" $x,$y");
+        x = this._transX(xCoords[i]);
+        y = this._transY(yCoords[i]);
+        this._sout.write(" $x,$y");
       }
-      _sout.writeln("\" fill=\"none\" $_lineClrStr/>");
+      this._sout.writeln("\" fill=\"none\" $_lineClrStr/>");
 
-      if (_lineDir) {
+      if (this._lineDir) {
         double x1 = xCoords[0];
         double y1 = yCoords[0];
-        double tx1 = _transX(x1);
-        double ty1 = _transY(y1);
+        double tx1 = this._transX(x1);
+        double ty1 = this._transY(y1);
         for (int i = 1; i < count; ++i) {
           double x2 = xCoords[i];
           double y2 = yCoords[i];
-          double tx2 = _transX(x2);
-          double ty2 = _transY(y2);
-          _drawTransLine(x1, y1, x2, y2, tx1, ty1, tx2, ty2);
+          double tx2 = this._transX(x2);
+          double ty2 = this._transY(y2);
+          this._drawTransLine(x1, y1, x2, y2, tx1, ty1, tx2, ty2);
           x1 = x2;
           y1 = y2;
           tx1 = tx2;
@@ -363,51 +369,43 @@ class Renderer extends IRenderer {
       }
     }
 
-    if (_pointSize > 1.0) {
-      drawPoints(xCoords, yCoords);
-    }
+    if (_pointSize > 1.0)
+      this.drawPoints(xCoords, yCoords);
   }
 
   /// Finishes the render and applies the SVG.
-  void finalize() {
-    _svg.setInnerHtml(_sout.toString(), validator: _svgValidator);
-  }
+  void finalize() =>
+    this._svg.setInnerHtml(_sout.toString(), validator: _svgValidator, treeSanitizer: _treeSanitizer);
 
   /// Translates the given x value by the current transformer.
-  double _transX(double x) {
-    return _trans.transformX(x);
-  }
+  double _transX(double x) =>
+    this._trans.transformX(x);
 
   /// Translates the given y value by the current transformer.
-  double _transY(double y) {
-    return _window.ymax - _trans.transformY(y);
-  }
+  double _transY(double y) =>
+    this._window.ymax - this._trans.transformY(y);
 
   /// Gets the SVG color string for the given color.
   String _getColorString(Color color) {
-    var r = (color.red * 255.0).floor();
-    var g = (color.green * 255.0).floor();
-    var b = (color.blue * 255.0).floor();
+    int r = (color.red   * 255.0).floor();
+    int g = (color.green * 255.0).floor();
+    int b = (color.blue  * 255.0).floor();
     return "rgb($r, $g, $b)";
   }
 
   /// Writes a point SVG to the buffer.
-  void _writePoint(double x, double y, double r) {
-    _sout.writeln("<circle cx=\"$x\" cy=\"$y\" r=\"$r\" $_pointClrStr />");
-  }
+  void _writePoint(double x, double y, double r) =>
+    this._sout.writeln("<circle cx=\"$x\" cy=\"$y\" r=\"$r\" ${this._pointClrStr} />");
 
   /// Writes a line SVG to the buffer.
-  void _writeLine(double x1, double y1, double x2, double y2) {
-    _sout.writeln("<line x1=\"$x1\" y1=\"$y1\" x2=\"$x2\" y2=\"$y2\" $_lineClrStr/>");
-  }
+  void _writeLine(double x1, double y1, double x2, double y2) =>
+    this._sout.writeln("<line x1=\"$x1\" y1=\"$y1\" x2=\"$x2\" y2=\"$y2\" ${this._lineClrStr}/>");
 
   /// Writes a rectangle SVG to the buffer.
-  void _writeRect(double x, double y, double width, double height) {
-    _sout.writeln("<rect x=\"$x\" y=\"$y\" width=\"$width\" height=\"$height\" $_fillClrStr$_lineClrStr/>");
-  }
+  void _writeRect(double x, double y, double width, double height) =>
+    this._sout.writeln("<rect x=\"$x\" y=\"$y\" width=\"$width\" height=\"$height\" ${this._fillClrStr}${this._lineClrStr}/>");
 
   /// Writes an ellipse SVG to the buffer.
-  void _writeEllipse(double cx, double cy, double rx, double ry) {
-    _sout.writeln("<ellipse cx=\"$cx\" cy=\"$cy\" rx=\"$rx\" ry=\"$ry\" $_fillClrStr$_lineClrStr/>");
-  }
+  void _writeEllipse(double cx, double cy, double rx, double ry) =>
+    this._sout.writeln("<ellipse cx=\"$cx\" cy=\"$cy\" rx=\"$rx\" ry=\"$ry\" ${this._fillClrStr}${this._lineClrStr}/>");
 }
