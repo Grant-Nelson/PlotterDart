@@ -10,7 +10,7 @@ class FillColorAttr extends IAttribute {
 
   /// Creates a fill color attribute.
   FillColorAttr([this._color = null]) {
-    _last = null;
+    this._last = null;
   }
 
   /// Creates a fill color attribute.
@@ -18,18 +18,18 @@ class FillColorAttr extends IAttribute {
     new FillColorAttr(new Color(red, green, blue, alpha));
 
   /// The color to apply for this attribute.
-  Color get color => _color;
-  set color(Color color) => _color = color;
+  Color get color => this._color;
+  set color(Color color) => this._color = color;
 
   /// Pushes the attribute to the renderer.
   void _pushAttr(IRenderer r) {
-    _last = r.fillColor;
-    r.fillColor = _color;
+    this._last = r.fillColor;
+    r.fillColor = this._color;
   }
 
   /// Pops the attribute from the renderer.
   void _popAttr(IRenderer r) {
-    r.fillColor = _last;
-    _last = null;
+    r.fillColor = this._last;
+    this._last = null;
   }
 }

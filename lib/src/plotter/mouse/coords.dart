@@ -10,7 +10,7 @@ class MouseCoords implements IMouseHandle {
 
   /// Creates a new coordinate handler.
   MouseCoords(this._plot) {
-    _text = _plot.addText(0.0, 0.0, 12.0, "");
+    this._text = this._plot.addText(0.0, 0.0, 12.0, "");
   }
 
   /// handles mouse down.
@@ -18,9 +18,9 @@ class MouseCoords implements IMouseHandle {
 
   /// handles mouse moved.
   void mouseMove(MouseEvent e) {
-    String x = _plot.view.untransformX(e.px).toStringAsPrecision(3);
-    String y = _plot.view.untransformY(e.py).toStringAsPrecision(3);
-    _text
+    String x = this._plot.view.untransformX(e.px).toStringAsPrecision(3);
+    String y = this._plot.view.untransformY(e.py).toStringAsPrecision(3);
+    this._text
       ..x = (e.x + 3)
       ..y = (e.y - 3)
       ..text = "$x, $y";

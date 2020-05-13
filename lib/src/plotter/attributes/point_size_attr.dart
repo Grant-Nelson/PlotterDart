@@ -10,21 +10,21 @@ class PointSizeAttr extends IAttribute {
 
   /// Creates a new point size attribute.
   PointSizeAttr(this._size) {
-    _last = 0.0;
+    this._last = 0.0;
   }
 
   /// The size of the point for this attribute.
-  double get size => _size;
-  set size(double size) => _size = size;
+  double get size => this._size;
+  set size(double size) => this._size = size;
 
   /// Pushes the attribute to the renderer.
   void _pushAttr(IRenderer r) {
-    _last = r.pointSize;
-    r.pointSize = _size;
+    this._last = r.pointSize;
+    r.pointSize = this._size;
   }
 
   /// Pops the attribute from the renderer.
   void _popAttr(IRenderer r) {
-    r.pointSize = _last;
+    r.pointSize = this._last;
   }
 }

@@ -10,7 +10,7 @@ class MouseCrosshairs implements IMouseHandle {
 
   /// Creates a new mouse crosshairs.
   MouseCrosshairs(this._plot) {
-    _lines = _plot.addLines([])..addColor(1.0, 0.0, 0.0);
+    this._lines = this._plot.addLines([])..addColor(1.0, 0.0, 0.0);
   }
 
   /// Implements interface but has no effect.
@@ -18,12 +18,12 @@ class MouseCrosshairs implements IMouseHandle {
 
   /// Handles mouse movement to update the crosshairs.
   void mouseMove(MouseEvent e) {
-    Transformer trans = e.projection.mul(_plot.view);
+    Transformer trans = e.projection.mul(this._plot.view);
     double x = trans.untransformX(e.x);
     double y = trans.untransformY(e.window.ymax - e.y);
     double d = x - trans.untransformX(e.x + 10.0);
-    _lines.clear();
-    _lines.add([x - d, y, x + d, y, x, y - d, x, y + d]);
+    this._lines.clear();
+    this._lines.add([x - d, y, x + d, y, x, y - d, x, y + d]);
     e.redraw = true;
   }
 

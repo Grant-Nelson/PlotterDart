@@ -10,8 +10,8 @@ class ColorAttr extends IAttribute {
 
   /// Creates a line color attribute.
   ColorAttr(Color color) {
-    _color = color;
-    _last = null;
+    this._color = color;
+    this._last = null;
   }
 
   /// Creates a line color attribute.
@@ -19,18 +19,18 @@ class ColorAttr extends IAttribute {
     new ColorAttr(new Color(red, green, blue, alpha));
 
   /// The color to apply for this attribute.
-  Color get color => _color;
-  set color(Color color) => _color = color;
+  Color get color => this._color;
+  set color(Color color) => this._color = color;
 
   /// Pushes the attribute to the renderer.
   void _pushAttr(IRenderer r) {
-    _last = r.color;
-    r.color = _color;
+    this._last = r.color;
+    r.color = this._color;
   }
 
   /// Pops the attribute from the renderer.
   void _popAttr(IRenderer r) {
-    r.color = _last;
-    _last = null;
+    r.color = this._last;
+    this._last = null;
   }
 }

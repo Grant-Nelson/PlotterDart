@@ -10,22 +10,22 @@ class DirectedLineAttr implements IAttribute {
 
   /// Creates a directed line flag attribute.
   DirectedLineAttr([this._directed = true]) {
-    _last = false;
+    this._last = false;
   }
 
   /// Gets the directed line flag to apply for this attribute.
-  bool get directed => _directed;
-  set directed(bool directed) => _directed = directed;
+  bool get directed => this._directed;
+  set directed(bool directed) => this._directed = directed;
 
   /// Pushes the attribute to the renderer.
   void _pushAttr(IRenderer r) {
-    _last = r.directedLines;
-    r.directedLines = _directed;
+    this._last = r.directedLines;
+    r.directedLines = this._directed;
   }
 
   /// Pops the attribute from the renderer.
   void _popAttr(IRenderer r) {
-    r.directedLines = _last;
-    _last = false;
+    r.directedLines = this._last;
+    this._last = false;
   }
 }
