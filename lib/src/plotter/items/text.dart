@@ -11,30 +11,31 @@ class Text extends PlotterItem {
   Text();
 
   /// The x location of the left of the text.
-  double get x => _x;
-  set x(double value) => _x = value;
+  double get x => this._x;
+  set x(double value) => this._x = value;
 
   /// The y location of the bottom of the text.
-  double get y => _y;
-  set y(double value) => _y = value;
+  double get y => this._y;
+  set y(double value) => this._y = value;
 
   /// The size of the text in pixels.
-  double get size => _size;
-  set size(double value) => _size = value;
+  double get size => this._size;
+  set size(double value) => this._size = value;
 
   /// The text to draw.
-  String get text => _text;
-  set text(String value) => _text = value;
+  String get text => this._text;
+  set text(String value) => this._text = value;
 
   /// Draws the group to the panel.
   void _onDraw(IRenderer r) {
-    if (_text.length > 0) r.drawText(_x, _y, _size, _text);
+    if (this._text.length > 0)
+      r.drawText(this._x, this._y, this._size, this._text);
   }
 
   /// Gets the bounds for the item.
   Bounds _onGetBounds(Transformer trans) {
     Bounds b = new Bounds.empty();
-    if (_text.length > 0) b.expand(_x, _y);
+    if (this._text.length > 0) b.expand(this._x, this._y);
     return trans.transform(b);
   }
 }

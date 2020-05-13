@@ -10,21 +10,21 @@ abstract class BasicCoordsItem extends PlotterItem {
 
   /// Creates a coordinate plotter item.
   BasicCoordsItem._(this._coordCount) {
-    _coords = new List<List<double>>();
-    for (int i = 0; i < _coordCount; i++) _coords.add(new List<double>());
+    this._coords = new List<List<double>>();
+    for (int i = 0; i < this._coordCount; i++) this._coords.add(new List<double>());
   }
 
   // Clears all the items.
   void clear() {
-    for (int i = 0; i < _coordCount; i++) _coords[i].clear();
+    for (int i = 0; i < this._coordCount; i++) this._coords[i].clear();
   }
 
   /// Adds values to the item.
   void add(List<double> val) {
     final int count = val.length;
-    for (int i = 0; i < count; i += _coordCount) {
-      for (int j = 0; j < _coordCount; j++) {
-        _coords[j].add(val[i + j]);
+    for (int i = 0; i < count; i += this._coordCount) {
+      for (int j = 0; j < this._coordCount; j++) {
+        this._coords[j].add(val[i + j]);
       }
     }
   }
@@ -33,22 +33,22 @@ abstract class BasicCoordsItem extends PlotterItem {
   void set(int index, List<double> val) {
     final int count = val.length;
     List<List<double>> coords = new List<List<double>>();
-    for (int i = 0; i < _coordCount; i++) coords.add(new List<double>());
-    for (int i = 0; i < count; i += _coordCount) {
-      for (int j = 0; j < _coordCount; j++) coords[j].add(val[i + j]);
+    for (int i = 0; i < this._coordCount; i++) coords.add(new List<double>());
+    for (int i = 0; i < count; i += this._coordCount) {
+      for (int j = 0; j < this._coordCount; j++) coords[j].add(val[i + j]);
     }
-    for (int i = 0; i < _coordCount; i++) _coords[i].setAll(index, coords[i]);
+    for (int i = 0; i < this._coordCount; i++) this._coords[i].setAll(index, coords[i]);
   }
 
   /// Gets values from the item.
   List<double> get(int index, int count) {
     List<double> val = new List<double>();
     for (int i = 0; i < count; i++) {
-      for (int j = 0; j < _coordCount; j++) val.add(_coords[j][index + i]);
+      for (int j = 0; j < this._coordCount; j++) val.add(this._coords[j][index + i]);
     }
     return val;
   }
 
   /// The number of coordinate.
-  int get count => _coords[0].length;
+  int get count => this._coords[0].length;
 }
