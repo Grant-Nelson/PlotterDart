@@ -19,10 +19,10 @@ class MouseButtonState {
 
   /// Determines if the given state is the same as this state.
   bool equals(MouseButtonState other) {
-    return (button == other.button) &&
-        (shiftKey == other.shiftKey) &&
-        (ctrlKey == other.ctrlKey) &&
-        (altKey == other.altKey);
+    return (this.button == other.button) &&
+        (this.shiftKey == other.shiftKey) &&
+        (this.ctrlKey == other.ctrlKey) &&
+        (this.altKey == other.altKey);
   }
 }
 
@@ -47,18 +47,18 @@ class MouseEvent {
 
   /// Creates a new mouse event arguments.
   MouseEvent(this.window, this.projection, this.x, this.y, this.state) {
-    _redraw = false;
+    this._redraw = false;
   }
 
   /// Indicates if the plotter should be redrawn.
-  bool get redraw => _redraw;
-  set redraw(bool draw) => _redraw = draw;
+  bool get redraw => this._redraw;
+  set redraw(bool draw) => this._redraw = draw;
 
   /// Gets the graphic coordinate system mouse x location.
-  double get px => projection.untransformX(x);
+  double get px => this.projection.untransformX(this.x);
 
   /// Gets the graphic coordinate system mouse y location.
-  double get py => projection.untransformY(window.ymax - y);
+  double get py => this.projection.untransformY(this.window.ymax - this.y);
 }
 
 /// A mouse handler for managing user input.

@@ -13,26 +13,26 @@ class Group extends PlotterItem {
 
   /// Creates a new plotter item group.
   Group([this._label = "", this._enabled = true]) {
-    _items = new List<PlotterItem>();
+    this._items = new List<PlotterItem>();
   }
 
   /// The label for the item.
-  String get label => _label;
-  set label(String label) => _label = label;
+  String get label => this._label;
+  set label(String label) => this._label = label;
 
   /// Indicates if the item is enabled or disabled.
-  bool get enabled => _enabled;
-  set enabled(bool enabled) => _enabled = enabled;
+  bool get enabled => this._enabled;
+  set enabled(bool enabled) => this._enabled = enabled;
 
   /// The number of items in the group.
-  int get count => _items.length;
+  int get count => this._items.length;
 
   /// The list of items in the group.
-  List<PlotterItem> get items => _items;
+  List<PlotterItem> get items => this._items;
 
   /// Adds plotter items to the group.
   void add(List<PlotterItem> items) {
-    for (PlotterItem item in items) _items.add(item);
+    for (PlotterItem item in items) this._items.add(item);
   }
 
   /// Adds a text plotter item with the given data.
@@ -42,56 +42,56 @@ class Group extends PlotterItem {
       ..y = y
       ..size = size
       ..text = text;
-    add([item]);
+    this.add([item]);
     return item;
   }
 
   /// Adds a points plotter item with the given data.
   Points addPoints(List<double> val) {
     Points item = new Points()..add(val);
-    add([item]);
+    this.add([item]);
     return item;
   }
 
   /// Adds a lines plotter item with the given data.
   Lines addLines(List<double> val) {
     Lines item = new Lines()..add(val);
-    add([item]);
+    this.add([item]);
     return item;
   }
 
   /// Adds a line strip plotter item with the given data.
   LineStrip addLineStrip(List<double> val) {
     LineStrip item = new LineStrip()..add(val);
-    add([item]);
+    this.add([item]);
     return item;
   }
 
   /// Adds a polygon plotter item with the given data.
   Polygon addPolygon(List<double> val) {
     Polygon item = new Polygon()..add(val);
-    add([item]);
+    this.add([item]);
     return item;
   }
 
   /// Adds a rectangle plotter item with the given data.
   Rectangles addRects(List<double> items) {
     Rectangles item = new Rectangles()..add(items);
-    add([item]);
+    this.add([item]);
     return item;
   }
 
   /// Adds a circle plotter item with the given data.
   Circles addCircles(List<double> items) {
     Circles item = new Circles()..add(items);
-    add([item]);
+    this.add([item]);
     return item;
   }
 
   /// Adds a ellipses plotter item with the given data.
   Ellipses addEllipses(List<double> items) {
     Ellipses item = new Ellipses()..add(items);
-    add([item]);
+    this.add([item]);
     return item;
   }
 
@@ -101,22 +101,22 @@ class Group extends PlotterItem {
       ..label = label
       ..enabled = enabled;
     if (items != null) item.add(items);
-    add([item]);
+    this.add([item]);
     return item;
   }
 
   /// Draws the group to the panel.
   void _onDraw(IRenderer r) {
-    if (_enabled) {
-      for (PlotterItem item in _items) item.draw(r);
+    if (this._enabled) {
+      for (PlotterItem item in this._items) item.draw(r);
     }
   }
 
   /// Gets the bounds for the item.
   Bounds _onGetBounds(Transformer trans) {
     Bounds b = new Bounds.empty();
-    if (_enabled) {
-      for (PlotterItem item in _items) b.union(item.getBounds(trans));
+    if (this._enabled) {
+      for (PlotterItem item in this._items) b.union(item.getBounds(trans));
     }
     return b;
   }

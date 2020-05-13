@@ -70,77 +70,79 @@ class Plotter extends Group {
 
   /// Creates a new plotter.
   Plotter([String label = ""]) : super(label) {
-    _bounds = new Bounds.empty();
-    _viewTrans = new Transformer.identity();
-    add([new Grid(), new DataBounds()]);
-    _msHndls = new List<IMouseHandle>()..add(new MousePan(this, new MouseButtonState(0)));
-    addColor(0.0, 0.0, 0.0);
+    this._bounds = new Bounds.empty();
+    this._viewTrans = new Transformer.identity();
+    this.add([new Grid(), new DataBounds()]);
+    this._msHndls = new List<IMouseHandle>()
+      ..add(new MousePan(this, new MouseButtonState(0)));
+    this.addColor(0.0, 0.0, 0.0);
   }
 
   /// Focuses on the data.
   /// Note: May need to call updateBounds before this if the data has changed.
-  void focusOnData() => focusOnBounds(_bounds);
+  void focusOnData() => this.focusOnBounds(this._bounds);
 
   /// Focuses the view to the given bounds.
   void focusOnBounds(Bounds bounds, [double scalar = 0.95]) {
-    _viewTrans.reset();
+    this._viewTrans.reset();
     if (!bounds.isEmpty) {
       double scale = scalar / math.max(bounds.width, bounds.height);
-      _viewTrans.setScale(scale, scale);
-      _viewTrans.setOffset(-0.5 * (bounds.xmin + bounds.xmax) * scale, -0.5 * (bounds.ymin + bounds.ymax) * scale);
+      this._viewTrans.setScale(scale, scale);
+      this._viewTrans.setOffset(-0.5 * (bounds.xmin + bounds.xmax) * scale,
+                                -0.5 * (bounds.ymin + bounds.ymax) * scale);
     }
   }
 
   /// Updates the bounds of the data.
   /// This should be called whenever the data has changed.
   void updateBounds() {
-    _bounds = _onGetBounds(_viewTrans);
+    this._bounds = _onGetBounds(this._viewTrans);
   }
 
   /// Renders the plot with the given renderer.
   void render(IRenderer r) {
-    r.dataBounds = _bounds;
+    r.dataBounds = this._bounds;
     Transformer trans = r.transform;
-    trans = trans.mul(_viewTrans);
+    trans = trans.mul(this._viewTrans);
     r.transform = trans;
-    draw(r);
+    this.draw(r);
   }
 
   /// Gets the list of mouse handles,
-  List<IMouseHandle> get MouseHandles => _msHndls;
+  List<IMouseHandle> get MouseHandles => this._msHndls;
 
   /// The transformation from window space to view space.
-  Transformer get view => _viewTrans;
-  set view(Transformer view) => _viewTrans = view;
+  Transformer get view => this._viewTrans;
+  set view(Transformer view) => this._viewTrans = view;
 
   /// Sets the offset of the view transformation.
-  void setViewOffset(double x, double y) => _viewTrans.setOffset(x, y);
+  void setViewOffset(double x, double y) => this._viewTrans.setOffset(x, y);
 
   /// Sets the view transformation zoom.
   /// Note: This is 10 to the power of the given value, such that 0 is x1.0 zoom.
   void setViewZoom(double pow) {
     double scale = math.pow(10.0, pow);
-    _viewTrans.setScale(scale, scale);
+    this._viewTrans.setScale(scale, scale);
   }
 
   /// Handles mouse down events.
   void onMouseDown(MouseEvent e) {
-    for (IMouseHandle hndl in _msHndls) hndl.mouseDown(e);
+    for (IMouseHandle hndl in this._msHndls) hndl.mouseDown(e);
   }
 
   /// Handles mouse move events.
   void onMouseMove(MouseEvent e) {
-    for (IMouseHandle hndl in _msHndls) hndl.mouseMove(e);
+    for (IMouseHandle hndl in this._msHndls) hndl.mouseMove(e);
   }
 
   /// Handles mouse up events.
   void onMouseUp(MouseEvent e) {
-    for (IMouseHandle hndl in _msHndls) hndl.mouseUp(e);
+    for (IMouseHandle hndl in this._msHndls) hndl.mouseUp(e);
   }
 
   /// Handles mouse wheel move events.
   void onMouseWheel(MouseEvent e, double dw) {
-    double prev = math.max(_viewTrans.xScalar, _viewTrans.yScalar);
+    double prev = math.max(this._viewTrans.xScalar, this._viewTrans.yScalar);
     double scale = math.pow(10.0, math.log(prev) / math.ln10 - dw);
 
     if (scale < _minZoom)      scale = _minZoom;
@@ -148,11 +150,11 @@ class Plotter extends Group {
 
     double x = e.px;
     double y = e.py;
-    double dx = (_viewTrans.dx - x) * (scale / prev) + x;
-    double dy = (_viewTrans.dy - y) * (scale / prev) + y;
+    double dx = (this._viewTrans.dx - x) * (scale / prev) + x;
+    double dy = (this._viewTrans.dy - y) * (scale / prev) + y;
 
-    _viewTrans.setOffset(dx, dy);
-    _viewTrans.setScale(scale, scale);
+    this._viewTrans.setOffset(dx, dy);
+    this._viewTrans.setScale(scale, scale);
     e.redraw = true;
   }
 }

@@ -7,52 +7,57 @@ abstract class PlotterItem {
 
   /// Creates a plotter item.
   PlotterItem() {
-    _attrs = new List<IAttribute>();
+    this._attrs = new List<IAttribute>();
   }
 
   /// Gets the set of attributes for this item.
-  List<IAttribute> get attributes => _attrs;
+  List<IAttribute> get attributes => this._attrs;
 
   /// Adds an attribute to this item.
-  void addAttr(IAttribute attr) => _attrs.add(attr);
+  void addAttr(IAttribute attr) => this._attrs.add(attr);
 
   /// Adds a color attribute to this item.
   void addColor(double red, double green, double blue, [double alpha = 1.0]) =>
-    addAttr(new ColorAttr.rgb(red, green, blue, alpha));
+    this.addAttr(new ColorAttr.rgb(red, green, blue, alpha));
 
   /// Adds a point size attribute to this item.
-  void addPointSize(double size) => addAttr(new PointSizeAttr(size));
+  void addPointSize(double size) =>
+    this.addAttr(new PointSizeAttr(size));
 
   /// Adds a filled attribute to this item.
   void addFillColor(double red, double green, double blue, [double alpha = 1.0]) =>
-    addAttr(new FillColorAttr.rgb(red, green, blue, alpha));
+    this.addAttr(new FillColorAttr.rgb(red, green, blue, alpha));
 
   /// Adds a filled attribute indicating no fill color to this item.
-  void addNoFillColor() => addAttr(new FillColorAttr(null));
+  void addNoFillColor() =>
+    this.addAttr(new FillColorAttr(null));
 
   /// Adds a directed line attribute to this item.
-  void addDirected(bool directed) => addAttr(new DirectedLineAttr(directed));
+  void addDirected(bool directed) =>
+    this.addAttr(new DirectedLineAttr(directed));
 
   /// Draws the item to the panel.
   void draw(IRenderer r) {
-    final int count = _attrs.length;
-    for (int i = 0; i < count; i++) _attrs[i]._pushAttr(r);
-    _onDraw(r);
-    for (int i = count - 1; i >= 0; i--) _attrs[i]._popAttr(r);
+    final int count = this._attrs.length;
+    for (int i = 0; i < count; i++)
+      this._attrs[i]._pushAttr(r);
+    this._onDraw(r);
+    for (int i = count - 1; i >= 0; i--)
+      this._attrs[i]._popAttr(r);
   }
 
   /// Gets the bounds for this item.
   Bounds getBounds(Transformer trans) {
-    final int count = _attrs.length;
+    final int count = this._attrs.length;
     for (int i = 0; i < count; i++) {
-      IAttribute attr = _attrs[i];
+      IAttribute attr = this._attrs[i];
       if (attr is TransAttr) {
         trans = attr.apply(trans);
       }
     }
-    Bounds b = _onGetBounds(trans);
+    Bounds b = this._onGetBounds(trans);
     for (int i = count - 1; i >= 0; i--) {
-      IAttribute attr = _attrs[i];
+      IAttribute attr = this._attrs[i];
       if (attr is TransAttr) {
         trans = attr.unapply(trans);
       }
