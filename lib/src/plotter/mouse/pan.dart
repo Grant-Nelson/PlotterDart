@@ -42,7 +42,7 @@ class MousePan implements IMouseHandle {
 
   /// handles mouse down.
   void mouseDown(MouseEvent e) {
-    if (_enabled && e.state.equals(_state)) {
+    if (this._enabled && e.state.equals(this._state)) {
       this._viewx = this._plot.view.dx;
       this._viewy = this._plot.view.dy;
       this._msx = e.x;

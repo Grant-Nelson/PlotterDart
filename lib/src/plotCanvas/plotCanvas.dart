@@ -1,20 +1,19 @@
-library plotSvg;
+library plotCanvas;
 
 import 'dart:html' as html;
 import 'dart:math' as math;
-import 'dart:svg' as svg;
 
 import '../plotter/plotter.dart';
 
 part 'renderer.dart';
 
-/// Plotter renderer which outputs SVG.
-class PlotSvg {
+/// Plotter renderer which outputs to a canvas.
+class PlotCanvas {
   /// The target html div to write to.
   html.Element _targetDiv;
 
-  /// The SVG element.
-  svg.SvgSvgElement _svg;
+  /// The canvas element.
+  html.CanvasElement _canvas;
 
   /// The plotter to render.
   Plotter _plotter;
@@ -26,16 +25,16 @@ class PlotSvg {
   bool _pendingRender;
 
   /// Creates a plotter that outputs SVG.
-  PlotSvg.fromElem(this._targetDiv, this._plotter) {
-    this._svg = new svg.SvgSvgElement();
-    this._renderer = new Renderer._(this._svg);
-    this._svg.style
+  PlotCanvas.fromElem(this._targetDiv, this._plotter) {
+    this._canvas = new html.CanvasElement();
+    this._renderer = new Renderer._(this._canvas.getContext("2d"));
+    this._canvas.style
       ..margin  = "0px"
       ..padding = "0px"
       ..width   = "100%"
       ..height  = "100%";
 
-    this._svg
+    this._canvas
       ..onResize.listen(this._resize)
       ..onMouseDown.listen(this._mouseDown)
       ..onMouseMove.listen(this._mouseMove)
@@ -45,15 +44,15 @@ class PlotSvg {
     html.window.onResize.listen(this._resize);
 
     this._pendingRender = false;
-    this._targetDiv.append(this._svg);
+    this._targetDiv.append(this._canvas);
     this.refresh();
   }
 
-  /// Creates a plotter that outputs SVG.
-  factory PlotSvg(String targetDivId, Plotter plot) =>
-    new PlotSvg.fromElem(html.querySelector('#' + targetDivId), plot);
+  /// Creates a plotter that outputs to a canvas.
+  factory PlotCanvas(String targetDivId, Plotter plot) =>
+    new PlotCanvas.fromElem(html.querySelector('#' + targetDivId), plot);
 
-  /// Refreshes the SVG drawing.
+  /// Refreshes the canvas drawing.
   void refresh() {
     if (!this._pendingRender) {
       this._pendingRender = true;
@@ -68,20 +67,21 @@ class PlotSvg {
 
   /// Draws to the target with SVG.
   void _draw() {
+    this._canvas.width = this._width.floor();
+    this._canvas.height = this._height.floor();
     this._renderer.reset(this._window, this._projection);
     this._plotter.render(this._renderer);
-    this._renderer.finalize();
   }
 
   /// The width of the div that is being plotted to.
   double get _width {
-    html.Rectangle<num> box = this._svg.getBoundingClientRect();
+    html.Rectangle<num> box = this._canvas.getBoundingClientRect();
     return (box.right - box.left).toDouble();
   }
 
   /// The height of the div that is being plotted to.
   double get _height {
-    html.Rectangle<num> box = this._svg.getBoundingClientRect();
+    html.Rectangle<num> box = this._canvas.getBoundingClientRect();
     return (box.bottom - box.top).toDouble();
   }
 
@@ -103,10 +103,7 @@ class PlotSvg {
 
   /// Creates a mouse event for a dart mouse event.
   MouseEvent _mouseLoc(html.MouseEvent e) {
-    svg.Point pt = this._svg.createSvgPoint();
-    pt.x = e.client.x;
-    pt.y = e.client.y;
-    svg.Point local = pt.matrixTransform(this._svg.getScreenCtm().inverse());
+    html.Point<num> local = e.client;
     return new MouseEvent(this._window, this._projection, local.x, local.y,
       new MouseButtonState(e.button, shiftKey: e.shiftKey, ctrlKey: e.ctrlKey, altKey: e.altKey));
   }

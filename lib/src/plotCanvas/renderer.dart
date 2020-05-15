@@ -1,18 +1,9 @@
-part of plotSvg;
+part of plotCanvas;
 
-/// A renderer for drawing SVG plots.
+/// A renderer for drawing canvas plots.
 class Renderer extends IRenderer {
-  /// SVG validator for adding HTML.
-  html.NodeValidatorBuilder _svgValidator;
-
-  /// SVG tree sanitizer for adding HTML.
-  html.NodeTreeSanitizer _treeSanitizer;
-
-  /// The element to add graphics to.
-  svg.SvgSvgElement _svg;
-
-  /// The buffer to temporarily store SVG while drawing.
-  StringBuffer _sout;
+  /// The context to render with.
+  html.CanvasRenderingContext2D _context;
 
   /// The bounds of the panel.
   Bounds _window;
@@ -32,31 +23,14 @@ class Renderer extends IRenderer {
   /// The current line color.
   Color _lineClr;
 
-  /// The CSS draw color currently set.
-  String _lineClrStr;
-
-  /// The CSS draw color currently set.
-  String _pointClrStr;
-
   /// The current fill color or null for no fill.
   Color _fillClr;
-
-  /// The CSS fill color currently set.
-  String _fillClrStr;
 
   /// The flag indicating if lines should be drawn directed.
   bool _lineDir;
 
   /// Creates a new renderer.
-  Renderer._(this._svg, [bool validateSVG = false]) {
-    if (validateSVG) {
-      this._svgValidator = new html.NodeValidatorBuilder()..allowSvg();
-      this._treeSanitizer = null;
-    } else {
-      this._svgValidator = null;
-      this._treeSanitizer = html.NodeTreeSanitizer.trusted;
-    }
-    this._sout = new StringBuffer();
+  Renderer._(this._context) {
     this._dataBounds = new Bounds.empty();
     this._pointSize = 0.0;
     this._backClr = new Color(1.0, 1.0, 1.0);
@@ -69,10 +43,8 @@ class Renderer extends IRenderer {
   void reset(Bounds window, Transformer trans) {
     this._window = window;
     this._trans = trans;
-    this._svg.nodes.clear();
-    this._svg.attributes["viewBox"] = "0 0 ${this._window.width} ${this._window.height}";
-    this._svg.style.backgroundColor = this._getColorString(this._backClr);
-    this._sout.clear();
+    this._context.fillStyle = this._getColorString(this._backClr);
+    this._context.fillRect(0, 0, this._window.width, this._window.height);
   }
 
   /// The data bounds.
@@ -101,19 +73,15 @@ class Renderer extends IRenderer {
   Color get color => this._lineClr;
   void set color(Color color) {
     this._lineClr = color;
-    String drawClr = this._getColorString(color);
-    this._lineClrStr = "stroke=\"$drawClr\" stroke-opacity=\"${color.alpha}\" ";
-    this._pointClrStr = "fill=\"$drawClr\" fill-opacity=\"${color.alpha}\" ";
+    this._context.strokeStyle = this._getColorString(color);
   }
 
   /// The color to fill shapes with.
   Color get fillColor => this._fillClr;
   void set fillColor(Color color) {
     this._fillClr = color;
-    if (color != null) {
-      String fillClr = this._getColorString(color);
-      this._fillClrStr = "fill=\"$fillClr\" fill-opacity=\"${color.alpha}\" ";
-    } else this._fillClrStr = "fill=\"none\" ";
+    // TODO: this._context.setFillColorRgb(r, g, b);
+    this._context.fillStyle = this._getColorString(color);
   }
 
   /// Indicates if the lines should be drawn directed (with arrows), or not.
@@ -122,8 +90,9 @@ class Renderer extends IRenderer {
 
   /// Draws text to the viewport.
   void drawText(double x, double y, double size, String text) {
-    this._sout.write("<text x=\"$x\" y=\"$y\" style=\"font-family: Verdana; font-size: ${size}px;\" ");
-    this._sout.writeln("${this._lineClrStr}${this._fillClrStr}>${text}</text>");
+    // TODO: IMPLEMENT
+    // this._sout.write("<text x=\"$x\" y=\"$y\" style=\"font-family: Verdana; font-size: ${size}px;\" ");
+    // this._sout.writeln("${this._lineClrStr}${this._fillClrStr}>${text}</text>");
   }
 
   /// Draws a point to the viewport.
@@ -157,7 +126,9 @@ class Renderer extends IRenderer {
 
   /// Draws a line to the viewport with pre-translated coordinates.
   void _drawTransLine(double x1, double y1, double x2, double y2, double tx1, double ty1, double tx2, double ty2) {
-    this._writeLine(tx1, ty1, tx2, ty2);
+    this._context.beginPath();
+    this._context.moveTo(tx1, ty1);
+    this._context.lineTo(tx2, ty2);
     if (this._lineDir) {
       double dx = x2 - x1;
       double dy = y2 - y1;
@@ -171,10 +142,12 @@ class Renderer extends IRenderer {
         double dx3 = dy * height;
         double ty3 = ty2 + dy * width;
         double dy3 = dx * height;
-        this._writeLine(tx2, ty2, tx3 + dx3, ty3 + dy3);
-        this._writeLine(tx2, ty2, tx3 - dx3, ty3 - dy3);
+        this._context.moveTo(tx3 + dx3, ty3 + dy3);
+        this._context.lineTo(tx2, ty2);
+        this._context.lineTo(tx3 - dx3, ty3 - dy3);
       }
     }
+    this._context.stroke();
   }
 
   /// Draws a set of lines to the viewport.
@@ -303,15 +276,16 @@ class Renderer extends IRenderer {
     assert(xCoords.length == yCoords.length);
     int count = xCoords.length;
     if (count >= 3) {
+      this._context.beginPath();
       double x = this._transX(xCoords[0]);
       double y = this._transY(yCoords[0]);
-      this._sout.write("<polygon points=\"$x,$y");
+      this._context.moveTo(x, y);
       for (int i = 1; i < count; ++i) {
         x = this._transX(xCoords[i]);
         y = this._transY(yCoords[i]);
-        this._sout.write(" $x,$y");
+        this._context.lineTo(x, y);
       }
-      this._sout.writeln("\" $_fillClrStr$_lineClrStr/>");
+      this._context.closePath();
 
       if (this._lineDir) {
         double x1 = xCoords[count - 1];
@@ -341,15 +315,16 @@ class Renderer extends IRenderer {
     assert(xCoords.length == yCoords.length);
     int count = xCoords.length;
     if (count >= 2) {
+      this._context.beginPath();
       double x = this._transX(xCoords[0]);
       double y = this._transY(yCoords[0]);
-      this._sout.write("<polyline points=\"$x,$y");
+      this._context.moveTo(x, y);
       for (int i = 1; i < count; ++i) {
         x = this._transX(xCoords[i]);
         y = this._transY(yCoords[i]);
-        this._sout.write(" $x,$y");
+        this._context.lineTo(x, y);
       }
-      this._sout.writeln("\" fill=\"none\" $_lineClrStr/>");
+      this._context.stroke();
 
       if (this._lineDir) {
         double x1 = xCoords[0];
@@ -374,10 +349,6 @@ class Renderer extends IRenderer {
       this.drawPoints(xCoords, yCoords);
   }
 
-  /// Finishes the render and applies the SVG.
-  void finalize() =>
-    this._svg.setInnerHtml(_sout.toString(), validator: _svgValidator, treeSanitizer: _treeSanitizer);
-
   /// Translates the given x value by the current transformer.
   double _transX(double x) =>
     this._trans.transformX(x);
@@ -388,25 +359,25 @@ class Renderer extends IRenderer {
 
   /// Gets the SVG color string for the given color.
   String _getColorString(Color color) {
+    if (color == null) return "";
     int r = (color.red   * 255.0).floor();
     int g = (color.green * 255.0).floor();
     int b = (color.blue  * 255.0).floor();
-    return "rgb($r, $g, $b)";
+    return "rgba($r, $g, $b, ${color.alpha})";
   }
 
   /// Writes a point SVG to the buffer.
-  void _writePoint(double x, double y, double r) =>
-    this._sout.writeln("<circle cx=\"$x\" cy=\"$y\" r=\"$r\" ${this._pointClrStr} />");
-
-  /// Writes a line SVG to the buffer.
-  void _writeLine(double x1, double y1, double x2, double y2) =>
-    this._sout.writeln("<line x1=\"$x1\" y1=\"$y1\" x2=\"$x2\" y2=\"$y2\" ${this._lineClrStr}/>");
+  void _writePoint(double x, double y, double r) {
+    this._context.ellipse(x, y, r, r, 0.0, 0.0, 0.0, true);
+  }
 
   /// Writes a rectangle SVG to the buffer.
-  void _writeRect(double x, double y, double width, double height) =>
-    this._sout.writeln("<rect x=\"$x\" y=\"$y\" width=\"$width\" height=\"$height\" ${this._fillClrStr}${this._lineClrStr}/>");
+  void _writeRect(double x, double y, double width, double height) {
+    this._context.rect(x, y, width, height);
+  }
 
   /// Writes an ellipse SVG to the buffer.
-  void _writeEllipse(double cx, double cy, double rx, double ry) =>
-    this._sout.writeln("<ellipse cx=\"$cx\" cy=\"$cy\" rx=\"$rx\" ry=\"$ry\" ${this._fillClrStr}${this._lineClrStr}/>");
+  void _writeEllipse(double cx, double cy, double rx, double ry) {
+    this._context.ellipse(cx, cy, rx, ry, 0.0, 0.0, 0.0, true);
+  }
 }
