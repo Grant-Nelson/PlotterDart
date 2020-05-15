@@ -9,7 +9,7 @@ import '../plotter/plotter.dart';
 part 'renderer.dart';
 
 /// Plotter renderer which outputs SVG.
-class PlotSvg {
+class PlotSvg implements IPlot {
   /// The target html div to write to.
   html.Element _targetDiv;
 
@@ -65,6 +65,9 @@ class PlotSvg {
       });
     }
   }
+
+  /// Gets the plotter to render.
+  Plotter get plotter => this._plotter;
 
   /// Draws to the target with SVG.
   void _draw() {

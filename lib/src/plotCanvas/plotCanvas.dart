@@ -8,7 +8,7 @@ import '../plotter/plotter.dart';
 part 'renderer.dart';
 
 /// Plotter renderer which outputs to a canvas.
-class PlotCanvas {
+class PlotCanvas implements IPlot {
   /// The target html div to write to.
   html.Element _targetDiv;
 
@@ -64,6 +64,9 @@ class PlotCanvas {
       });
     }
   }
+
+  /// Gets the plotter to render.
+  Plotter get plotter => this._plotter;
 
   /// Draws to the target with SVG.
   void _draw() {

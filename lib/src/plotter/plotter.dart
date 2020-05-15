@@ -27,6 +27,7 @@ part 'mouse/coords.dart';
 part 'mouse/crosshairs.dart';
 part 'mouse/pan.dart';
 
+part 'iplot.dart';
 part 'bounds.dart';
 part 'color.dart';
 part 'group.dart';

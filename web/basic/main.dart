@@ -24,7 +24,7 @@ void main() {
   plot.MouseHandles.add(new PointAdder(plot));
   plot.MouseHandles.add(new plotter.MouseCoords(plot));
 
-  bool useSVG = false;
+  bool useSVG = Uri.base.queryParameters["SVG"] == "true";
   if (useSVG) new plotSvg.PlotSvg("output", plot);
   else new plotCanvas.PlotCanvas("output", plot);
 }
