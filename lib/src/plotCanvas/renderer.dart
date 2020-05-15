@@ -1,5 +1,7 @@
 part of plotCanvas;
 
+const double _2pi = 2.0 * math.pi;
+
 /// A renderer for drawing canvas plots.
 class Renderer extends IRenderer {
   /// The context to render with.
@@ -23,8 +25,14 @@ class Renderer extends IRenderer {
   /// The current line color.
   Color _lineClr;
 
+  /// The current line color string.
+  String _lineClrStr;
+
   /// The current fill color or null for no fill.
   Color _fillClr;
+
+  /// The current fill color string or empty for no fill.
+  String _fillClrStr;
 
   /// The flag indicating if lines should be drawn directed.
   bool _lineDir;
@@ -73,15 +81,14 @@ class Renderer extends IRenderer {
   Color get color => this._lineClr;
   void set color(Color color) {
     this._lineClr = color;
-    this._context.strokeStyle = this._getColorString(color);
+    this._lineClrStr = this._getColorString(color);
   }
 
   /// The color to fill shapes with.
   Color get fillColor => this._fillClr;
   void set fillColor(Color color) {
     this._fillClr = color;
-    // TODO: this._context.setFillColorRgb(r, g, b);
-    this._context.fillStyle = this._getColorString(color);
+    this._fillClrStr = this._getColorString(color);
   }
 
   /// Indicates if the lines should be drawn directed (with arrows), or not.
@@ -90,9 +97,10 @@ class Renderer extends IRenderer {
 
   /// Draws text to the viewport.
   void drawText(double x, double y, double size, String text) {
-    // TODO: IMPLEMENT
-    // this._sout.write("<text x=\"$x\" y=\"$y\" style=\"font-family: Verdana; font-size: ${size}px;\" ");
-    // this._sout.writeln("${this._lineClrStr}${this._fillClrStr}>${text}</text>");
+    this._context.strokeStyle = this._lineClrStr;
+    this._context.fillStyle = this._fillClrStr;
+    this._context.font = "${size}px Verdana";
+    this._context.fillText(text, x, y);
   }
 
   /// Draws a point to the viewport.
@@ -125,7 +133,10 @@ class Renderer extends IRenderer {
   }
 
   /// Draws a line to the viewport with pre-translated coordinates.
-  void _drawTransLine(double x1, double y1, double x2, double y2, double tx1, double ty1, double tx2, double ty2) {
+  void _drawTransLine(double x1, double y1, double x2, double y2,
+    double tx1, double ty1, double tx2, double ty2) {
+    this._context.strokeStyle = this._lineClrStr;
+    this._context.fillStyle = "";
     this._context.beginPath();
     this._context.moveTo(tx1, ty1);
     this._context.lineTo(tx2, ty2);
@@ -276,6 +287,8 @@ class Renderer extends IRenderer {
     assert(xCoords.length == yCoords.length);
     int count = xCoords.length;
     if (count >= 3) {
+      this._context.strokeStyle = this._lineClrStr;
+      this._context.fillStyle = this._fillClrStr;
       this._context.beginPath();
       double x = this._transX(xCoords[0]);
       double y = this._transY(yCoords[0]);
@@ -285,7 +298,9 @@ class Renderer extends IRenderer {
         y = this._transY(yCoords[i]);
         this._context.lineTo(x, y);
       }
-      this._context.closePath();
+      if (this._fillClr == null)
+        this._context.stroke();
+      else this._context.fill();
 
       if (this._lineDir) {
         double x1 = xCoords[count - 1];
@@ -315,6 +330,8 @@ class Renderer extends IRenderer {
     assert(xCoords.length == yCoords.length);
     int count = xCoords.length;
     if (count >= 2) {
+      this._context.strokeStyle = this._lineClrStr;
+      this._context.fillStyle = "";
       this._context.beginPath();
       double x = this._transX(xCoords[0]);
       double y = this._transY(yCoords[0]);
@@ -368,16 +385,30 @@ class Renderer extends IRenderer {
 
   /// Writes a point SVG to the buffer.
   void _writePoint(double x, double y, double r) {
-    this._context.ellipse(x, y, r, r, 0.0, 0.0, 0.0, true);
+    this._context.strokeStyle = "";
+    this._context.fillStyle = this._lineClrStr;
+    this._context.beginPath();
+    this._context.arc(x, y, r, 0.0, _2pi);
+    this._context.fill();
   }
 
   /// Writes a rectangle SVG to the buffer.
   void _writeRect(double x, double y, double width, double height) {
+    this._context.strokeStyle = this._lineClrStr;
+    this._context.fillStyle = this._fillClrStr;
     this._context.rect(x, y, width, height);
+    if (this._fillClr == null)
+      this._context.stroke();
+    else this._context.fill();
   }
 
   /// Writes an ellipse SVG to the buffer.
   void _writeEllipse(double cx, double cy, double rx, double ry) {
-    this._context.ellipse(cx, cy, rx, ry, 0.0, 0.0, 0.0, true);
+    this._context.strokeStyle = this._lineClrStr;
+    this._context.fillStyle = this._fillClrStr;
+    this._context.ellipse(cx, cy, rx, ry, 0.0, 0.0, _2pi, true);
+    if (this._fillClr == null)
+      this._context.stroke();
+    else this._context.fill();
   }
 }

@@ -2,6 +2,7 @@ library main;
 
 import 'package:plotterDart/plotter.dart' as plotter;
 import 'package:plotterDart/plotSvg.dart' as plotSvg;
+import 'package:plotterDart/plotCanvas.dart' as plotCanvas;
 
 part "pointAdder.dart";
 
@@ -21,6 +22,9 @@ void main() {
   plot.updateBounds();
   plot.focusOnData();
   plot.MouseHandles.add(new PointAdder(plot));
+  plot.MouseHandles.add(new plotter.MouseCoords(plot));
 
-  new plotSvg.PlotSvg("output", plot);
+  bool useSVG = false;
+  if (useSVG) new plotSvg.PlotSvg("output", plot);
+  else new plotCanvas.PlotCanvas("output", plot);
 }
