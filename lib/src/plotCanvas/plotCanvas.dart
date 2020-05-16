@@ -106,7 +106,8 @@ class PlotCanvas implements IPlot {
 
   /// Creates a mouse event for a dart mouse event.
   MouseEvent _mouseLoc(html.MouseEvent e) {
-    html.Point<num> local = e.client;
+    html.Rectangle<num> rect = this._canvas.getBoundingClientRect();
+    html.Point<num> local = new html.Point(e.client.x - rect.left, e.client.y - rect.top);
     return new MouseEvent(this._window, this._projection, local.x, local.y,
       new MouseButtonState(e.button, shiftKey: e.shiftKey, ctrlKey: e.ctrlKey, altKey: e.altKey));
   }

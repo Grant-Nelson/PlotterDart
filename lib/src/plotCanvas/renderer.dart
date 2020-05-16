@@ -98,9 +98,10 @@ class Renderer extends IRenderer {
   /// Draws text to the viewport.
   void drawText(double x, double y, double size, String text) {
     this._context.strokeStyle = this._lineClrStr;
-    this._context.fillStyle = this._fillClrStr;
+    this._context.fillStyle = this._lineClrStr;
     this._context.font = "${size}px Verdana";
     this._context.fillText(text, x, y);
+    this._context.strokeText(text, x, y);
   }
 
   /// Draws a point to the viewport.
