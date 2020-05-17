@@ -6,9 +6,10 @@ class Text extends PlotterItem {
   double _y;
   double _size;
   String _text;
+  bool _scale;
 
   /// Creates a points plotter item.
-  Text();
+  Text([this._x = 0.0, this._y = 0.0, this._size = 10.0, this._text = "", this._scale = false]);
 
   /// The x location of the left of the text.
   double get x => this._x;
@@ -26,10 +27,14 @@ class Text extends PlotterItem {
   String get text => this._text;
   set text(String value) => this._text = value;
 
+  /// Indicates if the text should scale and track the graph.
+  bool get scale => this._scale;
+  set scale(bool value) => this._scale = value;
+
   /// Draws the group to the panel.
   void _onDraw(IRenderer r) {
     if (this._text.length > 0)
-      r.drawText(this._x, this._y, this._size, this._text);
+      r.drawText(this._x, this._y, this._size, this._text, this._scale);
   }
 
   /// Gets the bounds for the item.

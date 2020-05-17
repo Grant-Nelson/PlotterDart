@@ -43,6 +43,9 @@ class Renderer extends IRenderer {
 
   /// The CSS fill color currently set.
   String _fillClrStr;
+  
+  /// The current font to draw text with.
+  String _font;
 
   /// The flag indicating if lines should be drawn directed.
   bool _lineDir;
@@ -62,6 +65,7 @@ class Renderer extends IRenderer {
     this._backClr = new Color(1.0, 1.0, 1.0);
     this.color = new Color(0.0, 0.0, 0.0);
     this.fillColor = null;
+    this._font = "Verdana";
     this._lineDir = false;
   }
 
@@ -116,13 +120,24 @@ class Renderer extends IRenderer {
     } else this._fillClrStr = "fill=\"none\" ";
   }
 
+  /// The font to draw text with.
+  String get font => this._font;
+  void set font(String font) => this._font = font;
+
   /// Indicates if the lines should be drawn directed (with arrows), or not.
   bool get directedLines => this._lineDir;
   set directedLines(bool directed) => this._lineDir = directed;
 
   /// Draws text to the viewport.
-  void drawText(double x, double y, double size, String text) {
-    this._sout.write("<text x=\"$x\" y=\"$y\" style=\"font-family: Verdana; font-size: ${size}px;\" ");
+  void drawText(double x, double y, double size, String text, bool scale) {
+    if (scale) {
+      double x2 = this._transX(x + size);
+      x = this._transX(x);
+      y = this._transY(y);
+      size = (x2 - x).abs();
+    }
+
+    this._sout.write("<text x=\"$x\" y=\"$y\" style=\"font-family: ${this._font}; font-size: ${size}px;\" ");
     this._sout.writeln("${this._lineClrStr}${this._fillClrStr}>${text}</text>");
   }
 

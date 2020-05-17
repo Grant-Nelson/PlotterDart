@@ -34,6 +34,9 @@ class Renderer extends IRenderer {
   /// The current fill color string or empty for no fill.
   String _fillClrStr;
 
+  /// The current font to draw text with.
+  String _font;
+
   /// The flag indicating if lines should be drawn directed.
   bool _lineDir;
 
@@ -44,6 +47,7 @@ class Renderer extends IRenderer {
     this._backClr = new Color(1.0, 1.0, 1.0);
     this.color = new Color(0.0, 0.0, 0.0);
     this.fillColor = null;
+    this._font = "Verdana";
     this._lineDir = false;
   }
 
@@ -91,17 +95,30 @@ class Renderer extends IRenderer {
     this._fillClrStr = this._getColorString(color);
   }
 
+  /// The font to draw text with.
+  String get font => this._font;
+  void set font(String font) => this._font = font;
+
   /// Indicates if the lines should be drawn directed (with arrows), or not.
   bool get directedLines => this._lineDir;
   set directedLines(bool directed) => this._lineDir = directed;
 
   /// Draws text to the viewport.
-  void drawText(double x, double y, double size, String text) {
+  void drawText(double x, double y, double size, String text, bool scale) {
+    if (scale) {
+      double x2 = this._transX(x + size);
+      x = this._transX(x);
+      y = this._transY(y);
+      size = (x2 - x).abs();
+    }
+
+    this._context.beginPath();
     this._context.strokeStyle = this._lineClrStr;
-    this._context.fillStyle = this._lineClrStr;
-    this._context.font = "${size}px Verdana";
-    this._context.fillText(text, x, y);
+    this._context.fillStyle = this._fillClrStr;
+    this._context.font = "${size}px ${this._font}";
     this._context.strokeText(text, x, y);
+    if (this._fillClr != null)
+      this._context.fillText(text, x, y);
   }
 
   /// Draws a point to the viewport.
@@ -299,9 +316,9 @@ class Renderer extends IRenderer {
         y = this._transY(yCoords[i]);
         this._context.lineTo(x, y);
       }
-      if (this._fillClr == null)
-        this._context.stroke();
-      else this._context.fill();
+      this._context.stroke();
+      if (this._fillClr != null)
+        this._context.fill();
 
       if (this._lineDir) {
         double x1 = xCoords[count - 1];
@@ -399,9 +416,9 @@ class Renderer extends IRenderer {
     this._context.fillStyle = this._fillClrStr;
     this._context.beginPath();
     this._context.rect(x, y, width, height);
-    if (this._fillClr == null)
-      this._context.stroke();
-    else this._context.fill();
+    this._context.stroke();
+    if (this._fillClr != null)
+      this._context.fill();
   }
 
   /// Writes an ellipse SVG to the buffer.
@@ -410,8 +427,8 @@ class Renderer extends IRenderer {
     this._context.fillStyle = this._fillClrStr;
     this._context.beginPath();
     this._context.ellipse(cx, cy, rx, ry, 0.0, 0.0, _2pi, true);
-    if (this._fillClr == null)
-      this._context.stroke();
-    else this._context.fill();
+    this._context.stroke();
+    if (this._fillClr != null)
+      this._context.fill();
   }
 }

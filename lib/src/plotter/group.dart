@@ -36,12 +36,8 @@ class Group extends PlotterItem {
   }
 
   /// Adds a text plotter item with the given data.
-  Text addText(double x, double y, double size, String text) {
-    Text item = new Text()
-      ..x = x
-      ..y = y
-      ..size = size
-      ..text = text;
+  Text addText(double x, double y, double size, String text, [bool scale = false]) {
+    Text item = new Text(x, y, size, text, scale);
     this.add([item]);
     return item;
   }

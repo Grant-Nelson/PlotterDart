@@ -32,12 +32,16 @@ abstract class IRenderer {
   Color get fillColor;
   set fillColor(Color color);
 
+  /// The font to draw text with.
+  String get font;
+  set font(String font);
+
   /// Indicates if the lines should be drawn directed (with arrows), or not.
   bool get directedLines;
   set directedLines(bool directed);
 
   /// Draws text to the viewport.
-  void drawText(double x, double y, double size, String text);
+  void drawText(double x, double y, double size, String text, bool scale);
 
   /// Draws a point to the viewport.
   void drawPoint(double x, double y);

@@ -40,6 +40,10 @@ abstract class PlotterItem {
   void addNoFillColor() =>
     this.addAttr(new FillColorAttr(null));
 
+  /// Adds a font attribute to this item.
+  void addFont(String font) =>
+    this.addAttr(new FontAttr(font));
+
   /// Adds a directed line attribute to this item.
   void addDirected(bool directed) =>
     this.addAttr(new DirectedLineAttr(directed));

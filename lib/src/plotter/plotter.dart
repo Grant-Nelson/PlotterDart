@@ -5,12 +5,13 @@ import 'dart:math' as math;
 part 'attributes/color_attr.dart';
 part 'attributes/directed_line_attr.dart';
 part 'attributes/fill_color_attr.dart';
+part 'attributes/font_attr.dart';
 part 'attributes/point_size_attr.dart';
 part 'attributes/trans_attr.dart';
 
 part 'items/base_coords_item.dart';
 part 'items/circle_group.dart';
-part 'items/circle.dart';
+part 'items/circles.dart';
 part 'items/data_bounds.dart';
 part 'items/ellipse_group.dart';
 part 'items/ellipses.dart';
