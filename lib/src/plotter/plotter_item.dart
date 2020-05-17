@@ -5,10 +5,18 @@ abstract class PlotterItem {
   /// The set of attributes for this item.
   List<IAttribute> _attrs;
 
+  /// Indicates if this item should be plotted or not. 
+  bool _enabled;
+
   /// Creates a plotter item.
   PlotterItem() {
     this._attrs = new List<IAttribute>();
+    this._enabled = true;
   }
+
+  /// Enables or disables this item for being plotted.
+  bool get enabled => this._enabled;
+  set enabled(bool enabled) => this._enabled = enabled;
 
   /// Gets the set of attributes for this item.
   List<IAttribute> get attributes => this._attrs;
@@ -38,6 +46,7 @@ abstract class PlotterItem {
 
   /// Draws the item to the panel.
   void draw(IRenderer r) {
+    if (!this._enabled) return;
     final int count = this._attrs.length;
     for (int i = 0; i < count; i++)
       this._attrs[i]._pushAttr(r);
@@ -48,19 +57,16 @@ abstract class PlotterItem {
 
   /// Gets the bounds for this item.
   Bounds getBounds(Transformer trans) {
+    if (!this._enabled) return new Bounds.empty();
     final int count = this._attrs.length;
     for (int i = 0; i < count; i++) {
       IAttribute attr = this._attrs[i];
-      if (attr is TransAttr) {
-        trans = attr.apply(trans);
-      }
+      if (attr is TransAttr) trans = attr.apply(trans);
     }
     Bounds b = this._onGetBounds(trans);
     for (int i = count - 1; i >= 0; i--) {
       IAttribute attr = this._attrs[i];
-      if (attr is TransAttr) {
-        trans = attr.unapply(trans);
-      }
+      if (attr is TransAttr) trans = attr.unapply(trans);
     }
     return b;
   }

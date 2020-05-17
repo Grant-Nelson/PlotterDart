@@ -220,8 +220,8 @@ class Renderer extends IRenderer {
       y1 = y2;
       y2 = temp;
     }
-    double rx = (x2 - x1) * 0.5;
-    double ry = (y2 - y1) * 0.5;
+    double rx = (x2 - x1).abs() * 0.5;
+    double ry = (y2 - y1).abs() * 0.5;
     double cx = x1 + rx;
     double cy = y1 + ry;
     this._writeEllipse(cx, cy, rx, ry);
@@ -261,8 +261,8 @@ class Renderer extends IRenderer {
       double y2 = this._transY(cy + r);
       cx = this._transX(cx);
       cy = this._transY(cy);
-      double rx = x2 - cx;
-      double ry = y2 - cy;
+      double rx = (x2 - cx).abs();
+      double ry = (y2 - cy).abs();
       this._writeEllipse(cx, cy, rx, ry);
     }
   }
@@ -277,8 +277,8 @@ class Renderer extends IRenderer {
       double y2 = this._transY(cy + radius);
       cx = this._transX(cx);
       cy = this._transY(cy);
-      double rx = x2 - cx;
-      double ry = y2 - cy;
+      double rx = (x2 - cx).abs();
+      double ry = (y2 - cy).abs();
       this._writeEllipse(cx, cy, rx, ry);
     }
   }
@@ -397,6 +397,7 @@ class Renderer extends IRenderer {
   void _writeRect(double x, double y, double width, double height) {
     this._context.strokeStyle = this._lineClrStr;
     this._context.fillStyle = this._fillClrStr;
+    this._context.beginPath();
     this._context.rect(x, y, width, height);
     if (this._fillClr == null)
       this._context.stroke();
@@ -407,6 +408,7 @@ class Renderer extends IRenderer {
   void _writeEllipse(double cx, double cy, double rx, double ry) {
     this._context.strokeStyle = this._lineClrStr;
     this._context.fillStyle = this._fillClrStr;
+    this._context.beginPath();
     this._context.ellipse(cx, cy, rx, ry, 0.0, 0.0, _2pi, true);
     if (this._fillClr == null)
       this._context.stroke();

@@ -12,7 +12,7 @@ class Circles extends BasicCoordsItem {
 
   /// Draws the group to the panel.
   void _onDraw(IRenderer r) =>
-    r.drawCircs(this._coords[0], this._coords[1], this._coords[2]);
+    r.drawCircs(this._lefts, this._tops, this._radii);
 
   /// Gets the bounds for the item.
   Bounds _onGetBounds(Transformer trans) {

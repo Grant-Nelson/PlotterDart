@@ -148,6 +148,7 @@ class PlotSvg implements IPlot {
     MouseEvent me = this._mouseLoc(e);
     double dw = e.deltaY.toDouble() / 1000.0;
     this._plotter.onMouseWheel(me, dw);
+    this._plotter.onMouseMove(me);
     if (me.redraw) this.refresh();
   }
 }

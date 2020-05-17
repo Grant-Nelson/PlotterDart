@@ -74,14 +74,14 @@ class Group extends PlotterItem {
     return item;
   }
 
-  /// Adds a rectangle plotter item with the given data.
+  /// Adds a rectangles plotter item with the given data.
   Rectangles addRects(List<double> items) {
     Rectangles item = new Rectangles()..add(items);
     this.add([item]);
     return item;
   }
 
-  /// Adds a circle plotter item with the given data.
+  /// Adds a circles plotter item with the given data.
   Circles addCircles(List<double> items) {
     Circles item = new Circles()..add(items);
     this.add([item]);
@@ -91,6 +91,27 @@ class Group extends PlotterItem {
   /// Adds a ellipses plotter item with the given data.
   Ellipses addEllipses(List<double> items) {
     Ellipses item = new Ellipses()..add(items);
+    this.add([item]);
+    return item;
+  }
+
+  /// Adds a rectangle group plotter item with the given data.
+  RectangleGroup addRectGroup(double width, double height, List<double> items) {
+    RectangleGroup item = new RectangleGroup(width, height)..add(items);
+    this.add([item]);
+    return item;
+  }
+
+  /// Adds a circle group plotter item with the given data.
+  CircleGroup addCircleGroup(double radius, List<double> items) {
+    CircleGroup item = new CircleGroup(radius)..add(items);
+    this.add([item]);
+    return item;
+  }
+
+  /// Adds a ellipse group plotter item with the given data.
+  EllipseGroup addEllipseGroup(double width, double height, List<double> items) {
+    EllipseGroup item = new EllipseGroup(width, height)..add(items);
     this.add([item]);
     return item;
   }

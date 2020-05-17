@@ -235,8 +235,8 @@ class Renderer extends IRenderer {
       y1 = y2;
       y2 = temp;
     }
-    double rx = (x2 - x1) * 0.5;
-    double ry = (y2 - y1) * 0.5;
+    double rx = (x2 - x1).abs() * 0.5;
+    double ry = (y2 - y1).abs() * 0.5;
     double cx = x1 + rx;
     double cy = y1 + ry;
     this._writeEllipse(cx, cy, rx, ry);
@@ -276,8 +276,8 @@ class Renderer extends IRenderer {
       double y2 = this._transY(cy + r);
       cx = this._transX(cx);
       cy = this._transY(cy);
-      double rx = x2 - cx;
-      double ry = y2 - cy;
+      double rx = (x2 - cx).abs();
+      double ry = (y2 - cy).abs();
       this._writeEllipse(cx, cy, rx, ry);
     }
   }
@@ -292,8 +292,8 @@ class Renderer extends IRenderer {
       double y2 = this._transY(cy + radius);
       cx = this._transX(cx);
       cy = this._transY(cy);
-      double rx = x2 - cx;
-      double ry = y2 - cy;
+      double rx = (x2 - cx).abs();
+      double ry = (y2 - cy).abs();
       this._writeEllipse(cx, cy, rx, ry);
     }
   }
