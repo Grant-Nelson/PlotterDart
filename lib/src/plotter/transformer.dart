@@ -86,6 +86,22 @@ class Transformer {
   Bounds transform(Bounds b) {
     if (b.isEmpty) return new Bounds.empty();
     return new Bounds(
+      this.transformX(b.xmin), this.transformY(b.ymin),
+      this.transformX(b.xmax), this.transformY(b.ymax));
+  }
+
+  /// Transforms the given x value from the source coordinate system into the destination coordinate system.
+  /// First the value is scaled then translated with the offset.
+  double transformX(double x) => x * this._xScalar + this._dx;
+
+  /// Transforms the given y value from the source coordinate system into the destination coordinate system.
+  /// First the value is scaled then translated with the offset.
+  double transformY(double y) => y * this._yScalar + this._dy;
+  
+  /// Performs an inverse transformation on the given bounds.
+  Bounds untransform(Bounds b) {
+    if (b.isEmpty) return new Bounds.empty();
+    return new Bounds(
       this.untransformX(b.xmin), this.untransformY(b.ymin),
       this.untransformX(b.xmax), this.untransformY(b.ymax));
   }
@@ -95,12 +111,4 @@ class Transformer {
 
   /// Performs an inverse transformation on the given y value.
   double untransformY(double y) => (y - this._dy) / this._yScalar;
-
-  /// Transforms the given x value from the source coordinate system into the destination coordinate system.
-  /// First the value is scaled then translated with the offset.
-  double transformX(double x) => x * this._xScalar + this._dx;
-
-  /// Transforms the given y value from the source coordinate system into the destination coordinate system.
-  /// First the value is scaled then translated with the offset.
-  double transformY(double y) => y * this._yScalar + this._dy;
 }

@@ -24,29 +24,63 @@ abstract class PlotterItem {
   /// Adds an attribute to this item.
   void addAttr(IAttribute attr) => this._attrs.add(attr);
 
+  /// Adds a transformation to this item.
+  TransAttr addTrans(double xScalar, double yScalar, double dx, double dy) {
+    TransAttr attr = new TransAttr()
+      ..transform = Transformer(xScalar, yScalar, dx, dy);
+    this.addAttr(attr);
+    return attr;
+  }
+  
+  /// Adds an offset to this item.
+  TransAttr addOffset(double dx, double dy) =>
+    this.addTrans(1.0, 1.0, dx, dy);
+
+  /// Adds a scalar to this item.
+  TransAttr addScalar(double xScalar, double yScalar) =>
+    this.addTrans(xScalar, yScalar, 0.0, 0.0);
+
   /// Adds a color attribute to this item.
-  void addColor(double red, double green, double blue, [double alpha = 1.0]) =>
-    this.addAttr(new ColorAttr.rgb(red, green, blue, alpha));
+  ColorAttr addColor(double red, double green, double blue, [double alpha = 1.0]) {
+    ColorAttr attr = new ColorAttr.rgb(red, green, blue, alpha);
+    this.addAttr(attr);
+    return attr;
+  }
 
   /// Adds a point size attribute to this item.
-  void addPointSize(double size) =>
-    this.addAttr(new PointSizeAttr(size));
+  PointSizeAttr addPointSize(double size) {
+    PointSizeAttr attr = new PointSizeAttr(size);
+    this.addAttr(attr);
+    return attr;
+  }
 
   /// Adds a filled attribute to this item.
-  void addFillColor(double red, double green, double blue, [double alpha = 1.0]) =>
-    this.addAttr(new FillColorAttr.rgb(red, green, blue, alpha));
+  FillColorAttr addFillColor(double red, double green, double blue, [double alpha = 1.0]) {
+    FillColorAttr attr = new FillColorAttr.rgb(red, green, blue, alpha);
+    this.addAttr(attr);
+    return attr;
+  }
 
   /// Adds a filled attribute indicating no fill color to this item.
-  void addNoFillColor() =>
-    this.addAttr(new FillColorAttr(null));
+  FillColorAttr addNoFillColor() {
+    FillColorAttr attr = new FillColorAttr(null);
+    this.addAttr(attr);
+    return attr;
+  }
 
   /// Adds a font attribute to this item.
-  void addFont(String font) =>
-    this.addAttr(new FontAttr(font));
+  FontAttr addFont(String font) {
+    FontAttr attr = new FontAttr(font);
+    this.addAttr(attr);
+    return attr;
+  }
 
   /// Adds a directed line attribute to this item.
-  void addDirected(bool directed) =>
-    this.addAttr(new DirectedLineAttr(directed));
+  DirectedLineAttr addDirected(bool directed) {
+    DirectedLineAttr attr = new DirectedLineAttr(directed);
+    this.addAttr(attr);
+    return attr;
+  }
 
   /// Draws the item to the panel.
   void draw(IRenderer r) {

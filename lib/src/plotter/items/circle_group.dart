@@ -9,8 +9,8 @@ class CircleGroup extends BasicCoordsItem {
   /// Creates a new circle plotter item.
   CircleGroup(this._radius) : super._(2);
 
-  List<double> get _lefts => this._coords[0];
-  List<double> get _tops => this._coords[1];
+  List<double> get _centerXs => this._coords[0];
+  List<double> get _centerYs => this._coords[1];
 
   /// The radius for all the circles.
   double get radius => this._radius;
@@ -18,12 +18,13 @@ class CircleGroup extends BasicCoordsItem {
 
   /// Draws the group to the panel.
   void _onDraw(IRenderer r) =>
-    r.drawCircSet(this._lefts, this._tops, this._radius);
+    r.drawCircSet(this._centerXs, this._centerYs, this._radius);
 
   /// Gets the bounds for the item.
   Bounds _onGetBounds(Transformer trans) {
     Bounds b = new Bounds.empty();
-    for (int i = this.count - 1; i >= 0; --i) b.expand(this._lefts[i], this._tops[i]);
+    for (int i = this.count - 1; i >= 0; --i)
+      b.expand(this._centerXs[i], this._centerYs[i]);
     if (!b.isEmpty) {
       b.expand(b.xmin - this._radius, b.ymin - this._radius);
       b.expand(b.xmax + this._radius, b.ymax + this._radius);

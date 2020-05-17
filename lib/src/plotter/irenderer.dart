@@ -65,13 +65,13 @@ abstract class IRenderer {
   void drawRectSet(List<double> xCoords, List<double> yCoords, double width, double height);
 
   /// Draws a set of ellipse to the viewport.
-  void drawEllipse(List<double> xCoords, List<double> yCoords, List<double> widths, List<double> heights);
+  void drawEllipse(List<double> xCoords, List<double> yCoords, List<double> xRadii, List<double> yRadii);
 
   /// Draws a set of ellipse to the viewport.
-  void drawEllipseSet(List<double> xCoords, List<double> yCoords, double width, double height);
+  void drawEllipseSet(List<double> xCoords, List<double> yCoords, double xRadius, double yRadius);
 
   /// Draws a set of circles to the viewport.
-  void drawCircs(List<double> xCoords, List<double> yCoords, List<double> radius);
+  void drawCircs(List<double> xCoords, List<double> yCoords, List<double> radii);
 
   /// Draws a set of circles to the viewport.
   void drawCircSet(List<double> xCoords, List<double> yCoords, double radius);

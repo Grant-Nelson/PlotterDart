@@ -67,7 +67,7 @@ class Renderer extends IRenderer {
   Bounds get window => this._window;
 
   /// Gets the viewport into the window with the given transformation.
-  Bounds get viewport => this._trans.transform(this._window);
+  Bounds get viewport => this._trans.untransform(this._window);
 
   /// The transformer for the current data.
   Transformer get transform => this._trans;
@@ -116,9 +116,9 @@ class Renderer extends IRenderer {
     this._context.strokeStyle = this._lineClrStr;
     this._context.fillStyle = this._fillClrStr;
     this._context.font = "${size}px ${this._font}";
-    this._context.strokeText(text, x, y);
     if (this._fillClr != null)
       this._context.fillText(text, x, y);
+    this._context.strokeText(text, x, y);
   }
 
   /// Draws a point to the viewport.
@@ -222,7 +222,7 @@ class Renderer extends IRenderer {
   }
 
   /// Draws an ellipse to the viewport.
-  void drawEllipe(double x1, double y1, double x2, double y2) {
+  void _drawEllipse(double x1, double y1, double x2, double y2) {
     x1 = this._transX(x1);
     y1 = this._transY(y1);
     x2 = this._transX(x2);
@@ -245,33 +245,35 @@ class Renderer extends IRenderer {
   }
 
   /// Draws a set of ellipses to the viewport.
-  void drawEllipse(List<double> xCoords, List<double> yCoords, List<double> widths, List<double> heights) {
+  void drawEllipse(List<double> xCoords, List<double> yCoords, List<double> xRadii, List<double> yRadii) {
     assert(xCoords.length == yCoords.length);
-    assert(xCoords.length == widths.length);
-    assert(xCoords.length == heights.length);
+    assert(xCoords.length == xRadii.length);
+    assert(xCoords.length == yRadii.length);
     for (int i = xCoords.length - 1; i >= 0; --i) {
+      double xr = xRadii[i];
+      double yr = yRadii[i];
       double x = xCoords[i];
       double y = yCoords[i];
-      this.drawEllipe(x, y, x + widths[i], y + heights[i]);
+      this._drawEllipse(x - xr, y - yr, x + xr, y + yr);
     }
   }
 
   /// Draws a set of ellipses to the viewport.
-  void drawEllipseSet(List<double> xCoords, List<double> yCoords, double width, double height) {
+  void drawEllipseSet(List<double> xCoords, List<double> yCoords, double xRadius, double yRadius) {
     assert(xCoords.length == yCoords.length);
     for (int i = xCoords.length - 1; i >= 0; --i) {
       double x = xCoords[i];
       double y = yCoords[i];
-      this.drawEllipe(x, y, x + width, y + height);
+      this._drawEllipse(x - xRadius, y - yRadius, x + xRadius, y + yRadius);
     }
   }
 
   /// Draws a set of circles to the viewport.
-  void drawCircs(List<double> xCoords, List<double> yCoords, List<double> radius) {
+  void drawCircs(List<double> xCoords, List<double> yCoords, List<double> radii) {
     assert(xCoords.length == yCoords.length);
-    assert(xCoords.length == radius.length);
+    assert(xCoords.length == radii.length);
     for (int i = xCoords.length - 1; i >= 0; --i) {
-      double r = radius[i];
+      double r = radii[i];
       double cx = xCoords[i];
       double cy = yCoords[i];
       double x2 = this._transX(cx + r);
@@ -316,9 +318,9 @@ class Renderer extends IRenderer {
         y = this._transY(yCoords[i]);
         this._context.lineTo(x, y);
       }
-      this._context.stroke();
       if (this._fillClr != null)
         this._context.fill();
+      this._context.stroke();
 
       if (this._lineDir) {
         double x1 = xCoords[count - 1];
@@ -416,9 +418,9 @@ class Renderer extends IRenderer {
     this._context.fillStyle = this._fillClrStr;
     this._context.beginPath();
     this._context.rect(x, y, width, height);
-    this._context.stroke();
     if (this._fillClr != null)
       this._context.fill();
+    this._context.stroke();
   }
 
   /// Writes an ellipse SVG to the buffer.
@@ -427,8 +429,8 @@ class Renderer extends IRenderer {
     this._context.fillStyle = this._fillClrStr;
     this._context.beginPath();
     this._context.ellipse(cx, cy, rx, ry, 0.0, 0.0, _2pi, true);
-    this._context.stroke();
     if (this._fillClr != null)
       this._context.fill();
+    this._context.stroke();
   }
 }
