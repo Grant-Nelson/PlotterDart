@@ -110,7 +110,8 @@ class PlotSvg implements IPlot {
     pt.x = e.client.x;
     pt.y = e.client.y;
     svg.Point local = pt.matrixTransform(this._svg.getScreenCtm().inverse());
-    return new MouseEvent(this._window, this._projection, local.x, local.y,
+    Transformer viewProj = this._projection.mul(this._plotter.view);
+    return new MouseEvent(this._window, this._projection, viewProj, local.x, local.y,
       new MouseButtonState(e.button, shiftKey: e.shiftKey, ctrlKey: e.ctrlKey, altKey: e.altKey));
   }
 

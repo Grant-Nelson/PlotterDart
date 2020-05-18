@@ -4,6 +4,7 @@ import 'package:plotterDart/plotter.dart' as plotter;
 import 'package:plotterDart/plotSvg.dart' as plotSvg;
 import 'package:plotterDart/plotCanvas.dart' as plotCanvas;
 
+part "arrowAdder.dart";
 part "pointAdder.dart";
 
 void main() {
@@ -22,10 +23,12 @@ void main() {
   addRectangleGroup(plot);
   addRectangles(plot);
   addText(plot);
+  addMouseExamples(plot);
 
   plot.updateBounds();
   plot.focusOnData();
   plot.MouseHandles.add(new PointAdder(plot));
+  plot.MouseHandles.add(new ArrowAdder(plot));
   plot.MouseHandles.add(new plotter.MouseCoords(plot));
   plot.MouseHandles.add(new plotter.MouseCrosshairs(plot));
 
@@ -129,15 +132,43 @@ void addPolygon(plotter.Plotter plot) {
 
 void addRectangleGroup(plotter.Plotter plot) {
   plotter.Group group = createBox(plot, 200.0, -200.0, "Rectangle Group");
-
+  group.addRectGroup(8.0,  4.0, [10, 20,   20, 40,   30, 60]);
+  group.addRectGroup(8.0, 16.0, [30, 20,   40, 40,   50, 60])
+    ..addColor(0.0, 0.0, 1.0)
+    ..addFillColor(0.0, 1.0, 0.0);
 }
 
 void addRectangles(plotter.Plotter plot) {
   plotter.Group group = createBox(plot, 300.0, -200.0, "Rectangles");
-
+  group.addRects([10, 20, 8.0,  4.0,    20, 40,  6.0,  6.0,    30, 60,  4.0, 8.0]);
+  group.addRects([30, 20, 8.0, 16.0,    40, 40, 12.0, 12.0,    50, 60, 16.0, 8.0])
+    ..addColor(0.0, 0.0, 1.0)
+    ..addFillColor(0.0, 1.0, 0.0);
 }
 
 void addText(plotter.Plotter plot) {
   plotter.Group group = createBox(plot, 0.0, -300.0, "Text");
+  group.addText(10.0, 70.0, 4.0, "Small", true);
+  group.addText(10.0, 60.0, 6.0, "Courier", true)
+    ..addFont("Courier");
+  group.addText(10.0, 50.0, 6.0, "Colored", true)
+    ..addColor(1.0, 0.0, 0.0)
+    ..addFillColor(0.0, 0.0, 1.0);
+  group.addText(10.0, 30.0, 16.0, "Large", true)
+    ..addColor(0.0, 0.0, 0.0)
+    ..addFillColor(1.0, 1.0, 1.0, 0.5);
+}
 
+void addMouseExamples(plotter.Plotter plot) {
+  plotter.Group group = createBox(plot, 100.0, -300.0, "Mouse Examples");
+
+  group.addText(10.0, 70.0, 6.0, "Hold shift while clicking", true)
+    ..addFillColor(0.0, 0.0, 0.0);
+  group.addText(20.0, 60.0, 6.0, "to add red points.", true)
+    ..addFillColor(0.0, 0.0, 0.0);
+
+  group.addText(10.0, 40.0, 6.0, "Hold ctrl while clicking", true)
+    ..addFillColor(0.0, 0.0, 0.0);
+  group.addText(20.0, 30.0, 6.0, "to add red arrows.", true)
+    ..addFillColor(0.0, 0.0, 0.0);
 }

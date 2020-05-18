@@ -1,7 +1,7 @@
 part of plotter;
 
 /// A plotter item for drawing circles.
-/// The points are the top-left corner.
+/// The points are the x and y center points.
 class CircleGroup extends BasicCoordsItem {
   /// The radius of all the circles.
   double _radius;

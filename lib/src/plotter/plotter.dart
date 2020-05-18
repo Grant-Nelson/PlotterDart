@@ -21,7 +21,7 @@ part 'items/line_strip.dart';
 part 'items/points.dart';
 part 'items/polygon.dart';
 part 'items/rectangle_group.dart';
-part 'items/rectangle.dart';
+part 'items/rectangles.dart';
 part 'items/text.dart';
 
 part 'mouse/coords.dart';

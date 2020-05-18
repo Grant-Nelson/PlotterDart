@@ -2,6 +2,9 @@ part of plotter;
 
 /// A plotter item for points.
 class Text extends PlotterItem {
+  // FUTURE: Add alignment (left, right, center)
+  // FUTURE: Add an optional width for wrapping, alignment, and justification.
+
   double _x;
   double _y;
   double _size;

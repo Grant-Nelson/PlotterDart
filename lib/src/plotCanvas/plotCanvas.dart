@@ -108,7 +108,8 @@ class PlotCanvas implements IPlot {
   MouseEvent _mouseLoc(html.MouseEvent e) {
     html.Rectangle<num> rect = this._canvas.getBoundingClientRect();
     html.Point<num> local = new html.Point(e.client.x - rect.left, e.client.y - rect.top);
-    return new MouseEvent(this._window, this._projection, local.x, local.y,
+    Transformer viewProj = this._projection.mul(this._plotter.view);
+    return new MouseEvent(this._window, this._projection, viewProj, local.x, local.y,
       new MouseButtonState(e.button, shiftKey: e.shiftKey, ctrlKey: e.ctrlKey, altKey: e.altKey));
   }
 

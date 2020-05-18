@@ -1,7 +1,7 @@
 part of plotter;
 
 /// A plotter item for drawing ellipses.
-/// The coordinates are the top-left corner and radii.
+/// The coordinates are the x and y center points and radii.
 class Circles extends BasicCoordsItem {
   /// Creates a new ellipse plotter item.
   Circles() : super._(3);
